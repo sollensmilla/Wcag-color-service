@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "The second assignment in the course 1V610 at Linneuas univeristy. This is a small JavaScript library that generates WCAG-compliant light/dark variants from any base color.",
   "type": "module",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/server.js",
