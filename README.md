@@ -4,10 +4,11 @@ A small JavaScript library that generates WCAG-compliant light/dark variants fro
 ---
 
 ## Installation
-```bash
+
 npm install color-contrastor
 ---
 
 ## Liscense
+
 MIT
 ---
