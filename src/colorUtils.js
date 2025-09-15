@@ -63,5 +63,25 @@ export class ColorUtils {
     return (brightestLuminance + 0.05) / (darkestLuminance + 0.05)
   }
 
-  passesWcag
+  /**
+   * Checks if the contrast ratio between two colors meets the WCAG guidelines for a given level and text size.
+   * @param {*} color1 
+   * @param {*} color2 
+   * @param {*} level 
+   * @param {*} isLargeText 
+   * @returns {boolean} True if the colors pass the WCAG guidelines, false otherwise.
+   */
+  passesWcag(color1, color2, level = 'AA', isLargeText = false) {
+    const ratio = this.contrastRatio(color1, color2)
+
+    if (isLargeText) {
+      return ratio >= 3
+    }
+
+    if (level === 'AAA') {
+      return ratio >= 7
+    }
+
+    return ratio >= 4.5
+  }
 }
