@@ -46,4 +46,20 @@ export class ColorUtils {
       0.0722 * linearRGB[2]
     )
   }
+
+  /**
+   * Calculates the contrast ratio between two colors according to WCAG guidelines.
+   * @param {*} color1 
+   * @param {*} color2 
+   * @returns {number} The contrast ratio between the two colors.
+   */
+  contrastRatio(color1, color2) {
+    const luminance1 = this.relativeLuminance(this.hexToRgb(color1))
+    const luminance2 = this.relativeLuminance(this.hexToRgb(color2))
+
+    const brightestLuminance = Math.max(luminance1, luminance2)
+    const darkestLuminance = Math.min(luminance1, luminance2)
+
+    return (brightestLuminance + 0.05) / (darkestLuminance + 0.05)
+  }
 }
