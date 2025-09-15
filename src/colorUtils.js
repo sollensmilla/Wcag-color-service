@@ -40,6 +40,10 @@ export class ColorUtils {
         : Math.pow((value + 0.055) / 1.055, 2.4) // Linearize
     })
 
-    return 0.2126 * linearRGB[0] + 0.7152 * linearRGB[1] + 0.0722 * linearRGB[2]
+    return (
+      0.2126 * linearRGB[0] +
+      0.7152 * linearRGB[1] +
+      0.0722 * linearRGB[2]
+    )
   }
 }
