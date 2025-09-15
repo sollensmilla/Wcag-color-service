@@ -32,18 +32,18 @@ export class ColorUtils {
    * @return {number} The relative luminance value.
    */
   relativeLuminance([red, green, blue]) {
-    const standardRGB = [red, green, blue].map(value => value / 255) // Normalize
+    const standardRgb = [red, green, blue].map(value => value / 255) // Normalize
 
-    const linearRGB = standardRGB.map(value => {
+    const linearRgb = standardRgb.map(value => {
       return value <= 0.03928
         ? value / 12.92
         : Math.pow((value + 0.055) / 1.055, 2.4) // Linearize
     })
 
     return (
-      0.2126 * linearRGB[0] +
-      0.7152 * linearRGB[1] +
-      0.0722 * linearRGB[2]
+      0.2126 * linearRgb[0] +
+      0.7152 * linearRgb[1] +
+      0.0722 * linearRgb[2]
     )
   }
 
@@ -62,4 +62,6 @@ export class ColorUtils {
 
     return (brightestLuminance + 0.05) / (darkestLuminance + 0.05)
   }
+
+  passesWcag
 }
