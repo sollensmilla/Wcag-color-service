@@ -23,6 +23,23 @@ export class ColorUtils {
     const green = (decimalColorValue >> 8) & 255
     const blue = decimalColorValue & 255
 
-    return { red, green, blue }
+    return [red, green, blue]
+  }
+
+  /**
+   * Calculates the relative luminance of an RGB color according to WCAG guidelines and linearizes the color values.
+   * @param {array} rgbColor - An array containing the red, green, and blue components.
+   * @return {number} The relative luminance value.
+   */
+  relativeLuminance([red, green, blue]) {
+    const standardRGB = [red, green, blue].map(value => value / 255) // Normalize
+
+    const linearRGB = standardRGB.map(value => {
+      return value <= 0.03928
+        ? value / 12.92
+        : Math.pow((value + 0.055) / 1.055, 2.4) // Linearize
+    })
+
+    return 0.2126 * linearRGB[0] + 0.7152 * linearRGB[1] + 0.0722 * linearRGB[2]
   }
 }
