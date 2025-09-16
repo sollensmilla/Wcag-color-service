@@ -72,7 +72,11 @@ export class ColorUtils {
   /**
    * Checks if the contrast ratio between two colors meets the WCAG guidelines for a given level and text size.
    *
-   * @param {object} params - The parameters object.
+   * @param {object} params - The parameters object. The object should contain the following properties:
+   * @param {string} params.foreground - The foreground color in hex format.
+   * @param {string} params.background - The background color in hex format.
+   * @param {string} [params.level='AA'] - The WCAG level to check against ('AA' or 'AAA').
+   * @param {boolean} [params.isLargeText=false] - Whether the text is considered large (18pt or 14pt bold).
    * @returns {boolean} True if the colors pass the WCAG guidelines, false otherwise.
    */
   passesWcag ({ foreground, background, level = 'AA', isLargeText = false }) {
