@@ -12,10 +12,10 @@ export class ColorUtils {
   /**
    * Returns the RGB representation of a hex color code.
    *
-   * @param {*} hexColor - The hex color code (e.g., "#FFFFFF" or "FFFFFF").
+   * @param {string} hexColor - The hex color code (e.g., '#RRGGBB').
    * @returns {object} An object containing the red, green, and blue components.
    */
-  hexToRgb(hexColor) {
+  hexToRgb (hexColor) {
     const hashlessHex = hexColor.slice(1)
     const decimalColorValue = parseInt(hashlessHex, 16)
 
@@ -28,10 +28,14 @@ export class ColorUtils {
 
   /**
    * Calculates the relative luminance of an RGB color according to WCAG guidelines and linearizes the color values.
-   * @param {array} rgbColor - An array containing the red, green, and blue components.
-   * @return {number} The relative luminance value.
+   *
+   * @param {number[]} rgbColor - An array containing the red, green, and blue components.
+   * @param {number} rgbColor.0 - The red component (0-255).
+   * @param {number} rgbColor.1 - The green component (0-255).
+   * @param {number} rgbColor.2 - The blue component (0-255).
+   * @returns {number} The relative luminance value.
    */
-  relativeLuminance([red, green, blue]) {
+  relativeLuminance ([red, green, blue]) {
     const standardRgb = [red, green, blue].map(value => value / 255) // Normalize
 
     const linearRgb = standardRgb.map(value => {
@@ -48,42 +52,40 @@ export class ColorUtils {
   }
 
   /**
-   * Calculates the contrast ratio between two colors according to WCAG guidelines.
-   * @param {*} color1 
-   * @param {*} color2 
+   * Calculates the contrast ratio between a foreground color and a background color
+   * according to WCAG guidelines.
+   *
+   * @param {string} foreground - The foreground (e.g., text) color in hex format.
+   * @param {string} background - The background color in hex format.
    * @returns {number} The contrast ratio between the two colors.
    */
-  contrastRatio(color1, color2) {
-    const luminance1 = this.relativeLuminance(this.hexToRgb(color1))
-    const luminance2 = this.relativeLuminance(this.hexToRgb(color2))
+  contrastRatio (foreground, background) {
+    const luminanceForeground = this.relativeLuminance(this.hexToRgb(foreground))
+    const luminanceBackground = this.relativeLuminance(this.hexToRgb(background))
 
-    const brightestLuminance = Math.max(luminance1, luminance2)
-    const darkestLuminance = Math.min(luminance1, luminance2)
+    const brightestLuminance = Math.max(luminanceForeground, luminanceBackground)
+    const darkestLuminance = Math.min(luminanceForeground, luminanceBackground)
 
     return (brightestLuminance + 0.05) / (darkestLuminance + 0.05)
   }
 
   /**
    * Checks if the contrast ratio between two colors meets the WCAG guidelines for a given level and text size.
-   * @param {object} params - The parameters object. The object should contain the following properties:
-   * @param {string} params.foreground - The foreground color in hex format.
-   * @param {string} params.background - The background color in hex format.
-   * @param {string} [params.level='AA'] - The WCAG level to check against ('AA' or 'AAA').
-   * @param {boolean} [params.isLargeText=false] - Whether the text is considered large (18pt or 14pt bold).
+   *
+   * @param {object} params - The parameters object.
    * @returns {boolean} True if the colors pass the WCAG guidelines, false otherwise.
    */
-passesWcag({ foreground, background, level = 'AA', isLargeText = false }) {
-  const ratio = this.contrastRatio(foreground, background)
+  passesWcag ({ foreground, background, level = 'AA', isLargeText = false }) {
+    const ratio = this.contrastRatio(foreground, background)
 
-  if (isLargeText) {
-    return ratio >= 3
+    if (isLargeText) {
+      return ratio >= 3
+    }
+
+    if (level === 'AAA') {
+      return ratio >= 7
+    }
+
+    return ratio >= 4.5
   }
-
-  if (level === 'AAA') {
-    return ratio >= 7
-  }
-
-  return ratio >= 4.5
-}
-
 }
