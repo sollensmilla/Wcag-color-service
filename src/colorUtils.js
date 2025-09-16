@@ -9,13 +9,13 @@
  * A Utility class for color manipulation and conversion.
  */
 export class ColorUtils {
-/**
- * Returns the RGB representation of a hex color code.
- *
- * @param {*} hexColor - The hex color code (e.g., "#FFFFFF" or "FFFFFF").
- * @returns {object} An object containing the red, green, and blue components.
- */
-  hexToRgb (hexColor) {
+  /**
+   * Returns the RGB representation of a hex color code.
+   *
+   * @param {*} hexColor - The hex color code (e.g., "#FFFFFF" or "FFFFFF").
+   * @returns {object} An object containing the red, green, and blue components.
+   */
+  hexToRgb(hexColor) {
     const hashlessHex = hexColor.slice(1)
     const decimalColorValue = parseInt(hashlessHex, 16)
 
@@ -65,23 +65,25 @@ export class ColorUtils {
 
   /**
    * Checks if the contrast ratio between two colors meets the WCAG guidelines for a given level and text size.
-   * @param {*} color1 
-   * @param {*} color2 
-   * @param {*} level 
-   * @param {*} isLargeText 
+   * @param {object} params - The parameters object. The object should contain the following properties:
+   * @param {string} params.foreground - The foreground color in hex format.
+   * @param {string} params.background - The background color in hex format.
+   * @param {string} [params.level='AA'] - The WCAG level to check against ('AA' or 'AAA').
+   * @param {boolean} [params.isLargeText=false] - Whether the text is considered large (18pt or 14pt bold).
    * @returns {boolean} True if the colors pass the WCAG guidelines, false otherwise.
    */
-  passesWcag(color1, color2, level = 'AA', isLargeText = false) {
-    const ratio = this.contrastRatio(color1, color2)
+passesWcag({ foreground, background, level = 'AA', isLargeText = false }) {
+  const ratio = this.contrastRatio(foreground, background)
 
-    if (isLargeText) {
-      return ratio >= 3
-    }
-
-    if (level === 'AAA') {
-      return ratio >= 7
-    }
-
-    return ratio >= 4.5
+  if (isLargeText) {
+    return ratio >= 3
   }
+
+  if (level === 'AAA') {
+    return ratio >= 7
+  }
+
+  return ratio >= 4.5
+}
+
 }
