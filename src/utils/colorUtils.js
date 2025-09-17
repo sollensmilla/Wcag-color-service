@@ -1,5 +1,5 @@
 /**
- * Utility functions for color manipulation and conversion according to WCAG guidelines.
+ * Utility class for color manipulation and conversion according to WCAG guidelines.
  *
  * @author Smilla Sollén
  * @version 1.0.0
