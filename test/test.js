@@ -5,7 +5,7 @@
  * @version 1.0.0
  */
 
-import { ColorUtils } from '../src/utils/colorUtils.js';
+import { ColorUtils } from '../src/utils/ColorUtils.js';
 
 const colorUtils = new ColorUtils();
 
