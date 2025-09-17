@@ -5,6 +5,7 @@
  * @version 1.0.0
  */
 
+import { WcagCheck } from './WcagCheck.js'
 /**
  * A Utility class for color manipulation and conversion.
  */
@@ -79,17 +80,12 @@ export class ColorUtils {
    * @param {boolean} [params.isLargeText=false] - Whether the text is considered large (18pt or 14pt bold).
    * @returns {boolean} True if the colors pass the WCAG guidelines, false otherwise.
    */
-  passesWcag ({ foreground, background, level = 'AA', isLargeText = false }) {
-    const ratio = this.contrastRatio(foreground, background)
+passesWcag (wcagCheck) {
+  const { foreground, background, level = 'AA', isLargeText = false } = wcagCheck
+  const ratio = this.contrastRatio(foreground, background)
 
-    if (isLargeText) {
-      return ratio >= 3
-    }
-
-    if (level === 'AAA') {
-      return ratio >= 7
-    }
-
-    return ratio >= 4.5
-  }
+  if (isLargeText) return ratio >= 3
+  if (level === 'AAA') return ratio >= 7
+  return ratio >= 4.5
+}
 }
