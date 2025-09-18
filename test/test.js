@@ -15,8 +15,8 @@ console.log(colorUtils.contrastRatio('#FFFFFF', '#000000')) // Expected: 21
 console.log(colorUtils.contrastRatio('#FF0000', '#00FF00')) // Expected: ~2.91
 
 console.log('Testing passesWcag...')
-const check1 = new WcagCheck('#FFFFFF', '#000000', { level: 'AA' })
+const check1 = new WcagCheck('#FFFFFF', '#000000', { level: 'AAA' })
 console.log(colorUtils.passesWcag(check1)) // Expected: true
 
-const check2 = new WcagCheck('#FF0000', '#00FF00', { level: 'AA' })
+const check2 = new WcagCheck('#FF0000', '#00FF00', { isLargeText: true})
 console.log(colorUtils.passesWcag(check2)) // Expected: false
