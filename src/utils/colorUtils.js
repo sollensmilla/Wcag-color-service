@@ -16,7 +16,7 @@ export class ColorUtils {
    * @param {string} hexColor - The hex color code (e.g., '#RRGGBB').
    * @returns {object} An object containing the red, green, and blue components.
    */
-  hexToRgb (hexColor) {
+  #hexToRgb (hexColor) {
     const hashlessHex = hexColor.slice(1)
     const decimalColorValue = parseInt(hashlessHex, 16)
 
@@ -36,7 +36,7 @@ export class ColorUtils {
    * @param {number} rgbColor.2 - The blue component (0-255).
    * @returns {number} The relative luminance value.
    */
-  relativeLuminance ([red, green, blue]) {
+  #relativeLuminance ([red, green, blue]) {
     const standardRgb = [red, green, blue].map(value => value / 255) // Normalize
 
     const linearRgb = standardRgb.map(value => {
@@ -61,8 +61,8 @@ export class ColorUtils {
    * @returns {number} The contrast ratio between the two colors.
    */
   contrastRatio (foreground, background) {
-    const luminanceForeground = this.relativeLuminance(this.hexToRgb(foreground))
-    const luminanceBackground = this.relativeLuminance(this.hexToRgb(background))
+    const luminanceForeground = this.#relativeLuminance(this.#hexToRgb(foreground))
+    const luminanceBackground = this.#relativeLuminance(this.#hexToRgb(background))
 
     const brightestLuminance = Math.max(luminanceForeground, luminanceBackground)
     const darkestLuminance = Math.min(luminanceForeground, luminanceBackground)
