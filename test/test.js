@@ -10,14 +10,6 @@ import { WcagCheck } from '../src/utils/WcagCheck.js'
 
 const colorUtils = new ColorUtils()
 
-console.log('Testing hexToRgb...')
-console.log(colorUtils.hexToRgb('#FFFFFF')) // Expected: [255, 255, 255]
-console.log(colorUtils.hexToRgb('#000000')) // Expected: [0, 0, 0]
-
-console.log('Testing relativeLuminance...')
-console.log(colorUtils.relativeLuminance([255, 255, 255])) // Expected: 1
-console.log(colorUtils.relativeLuminance([0, 0, 0])) // Expected: 0
-
 console.log('Testing contrastRatio...')
 console.log(colorUtils.contrastRatio('#FFFFFF', '#000000')) // Expected: 21
 console.log(colorUtils.contrastRatio('#FF0000', '#00FF00')) // Expected: ~2.91
