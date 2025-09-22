@@ -100,4 +100,18 @@ passesWcag (wcagCheck) {
 
   return Math.round(Math.min(Math.max(adjustedValue, 0), 255))
 }
+
+/**
+ * Adjusts the brightness of an RGB color.
+ * @param {*} rgbColor 
+ * @param {*} adjustmentFactor 
+ * @returns {object} The adjusted RGB color.
+ */
+#adjustColorBrightness(rgbColor, adjustmentFactor) {
+  return {
+    r: this.#adjustColorChannel(rgbColor.r, adjustmentFactor),
+    g: this.#adjustColorChannel(rgbColor.g, adjustmentFactor),
+    b: this.#adjustColorChannel(rgbColor.b, adjustmentFactor)
+  }
+}
 }
