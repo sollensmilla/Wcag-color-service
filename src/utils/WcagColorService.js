@@ -139,4 +139,16 @@ lightenColor(hexColor, factor = 0.2) {
   const lightenedColor = this.#adjustColorBrightness(rgb, factor)
   return this.#rgbToHex(lightenedColor)
 }
+
+/**
+ * Darkens a hex color by a given factor. Default factor 0.2 is 20% darker.
+ * @param {*} hexColor 
+ * @param {*} factor 
+ * @returns {string} The darkened hex color.
+ */
+darkenColor (hexColor, factor = 0.2) {
+  const rgb = this.#hexToRgb(hexColor)
+  const darkenedColor = this.#adjustColorBrightness(rgb, -factor)
+  return this.#rgbToHex(darkenedColor)
+}
 }
