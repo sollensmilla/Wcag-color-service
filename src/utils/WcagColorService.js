@@ -9,7 +9,7 @@ import { WcagCheck } from './WcagCheck.js'
 /**
  * A Utility class for color manipulation and conversion.
  */
-export class ColorUtils {
+export class WcagColorService {
   /**
    * Returns the RGB representation of a hex color code.
    *
