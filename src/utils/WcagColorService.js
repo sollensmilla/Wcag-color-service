@@ -24,7 +24,7 @@ export class WcagColorService {
     const green = (decimalColorValue >> 8) & 255
     const blue = decimalColorValue & 255
 
-    return [red, green, blue]
+    return { red, green, blue } 
   }
 
   /**
@@ -36,7 +36,7 @@ export class WcagColorService {
    * @param {number} rgbColor.2 - The blue component (0-255).
    * @returns {number} The relative luminance value.
    */
-  #relativeLuminance ([red, green, blue]) {
+  #relativeLuminance ({ red, green, blue }) {
     const standardRgb = [red, green, blue].map(value => value / 255) // Normalize
 
     const linearRgb = standardRgb.map(value => {
@@ -105,7 +105,7 @@ passesWcag (wcagCheck) {
  * Adjusts the brightness of an RGB color.
  * @param {*} rgbColor 
  * @param {*} adjustmentFactor 
- * @returns {object} The adjusted RGB color.
+ * @returns {object} The adjusted RGB
  */
 #adjustColorBrightness(rgbColor, adjustmentFactor) {
   return {
