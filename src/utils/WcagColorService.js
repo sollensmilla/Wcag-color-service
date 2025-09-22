@@ -122,9 +122,9 @@ passesWcag (wcagCheck) {
  */
 #adjustColorBrightness(rgbColor, adjustmentFactor) {
   return {
-    r: this.#adjustColorChannel(rgbColor.r, adjustmentFactor),
-    g: this.#adjustColorChannel(rgbColor.g, adjustmentFactor),
-    b: this.#adjustColorChannel(rgbColor.b, adjustmentFactor)
+    red: this.#adjustColorChannel(rgbColor.red, adjustmentFactor),
+    green: this.#adjustColorChannel(rgbColor.green, adjustmentFactor),
+    blue: this.#adjustColorChannel(rgbColor.blue, adjustmentFactor)
   }
 }
 
@@ -150,5 +150,18 @@ darkenColor (hexColor, factor = 0.2) {
   const rgb = this.#hexToRgb(hexColor)
   const darkenedColor = this.#adjustColorBrightness(rgb, -factor)
   return this.#rgbToHex(darkenedColor)
+}
+
+/**
+ * Generates a color palette with lighter and darker shades of the base color.
+ * @param {*} baseColor 
+ * @returns 
+ */
+generatePalette(baseColor) {
+  return {
+    base: baseColor,
+    lighter: this.lightenColor(baseColor),
+    darker: this.darkenColor(baseColor)
+  }
 }
 }

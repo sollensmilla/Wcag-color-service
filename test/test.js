@@ -20,3 +20,7 @@ console.log(wcagService.passesWcag(check1)) // Expected: true
 
 const check2 = new WcagCheck('#FF0000', '#00FF00', { isLargeText: true})
 console.log(wcagService.passesWcag(check2)) // Expected: false
+
+
+const palette = wcagService.generatePalette('#3498db')
+console.log(palette)
