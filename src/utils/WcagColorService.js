@@ -95,9 +95,9 @@ passesWcag (wcagCheck) {
  * @param {*} adjustmentFactor 
  * @returns {number} The adjusted channel value, clamped between 0 and 255.
  */
-#adjustBrightness (channelValue, adjustmentFactor) {
+#adjustColorChannel(channelValue, adjustmentFactor) {
   const adjustedValue = channelValue + (channelValue * adjustmentFactor)
-  
+
   return Math.round(Math.min(Math.max(adjustedValue, 0), 255))
 }
 }
