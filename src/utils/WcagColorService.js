@@ -28,6 +28,19 @@ export class WcagColorService {
   }
 
   /**
+   * Returns the hex representation of an RGB color.
+   * @param {*} param0 
+   * @returns {string} The hex color code.
+   */
+  #rgbToHex ({ red, green, blue }) {
+    const toHex = (colorValue) => {
+      return colorValue.toString(16).padStart(2, '0')
+    }
+
+    return `#${toHex(red)}${toHex(green)}${toHex(blue)}`
+  }
+
+  /**
    * Calculates the relative luminance of an RGB color according to WCAG guidelines and linearizes the color values.
    *
    * @param {number[]} rgbColor - An array containing the red, green, and blue components.
