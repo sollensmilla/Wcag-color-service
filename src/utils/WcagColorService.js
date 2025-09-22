@@ -88,4 +88,16 @@ passesWcag (wcagCheck) {
   if (level === 'AAA') return ratio >= 7
   return ratio >= 4.5
 }
+
+/**
+ * Adjusts the brightness of a color channel (R, G, or B).
+ * @param {*} channelValue 
+ * @param {*} adjustmentFactor 
+ * @returns {number} The adjusted channel value, clamped between 0 and 255.
+ */
+#adjustBrightness (channelValue, adjustmentFactor) {
+  const adjustedValue = channelValue + (channelValue * adjustmentFactor)
+  
+  return Math.round(Math.min(Math.max(adjustedValue, 0), 255))
+}
 }
