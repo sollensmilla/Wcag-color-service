@@ -127,4 +127,16 @@ passesWcag (wcagCheck) {
     b: this.#adjustColorChannel(rgbColor.b, adjustmentFactor)
   }
 }
+
+/**
+ * Lightens a hex color by a given factor. Default factor 0.2 is 20% lighter.
+ * @param {*} hexColor 
+ * @param {*} factor 
+ * @returns {string} The lightened hex color.
+ */
+lightenColor(hexColor, factor = 0.2) {
+  const rgb = this.#hexToRgb(hexColor)
+  const lightenedColor = this.#adjustColorBrightness(rgb, factor)
+  return this.#rgbToHex(lightenedColor)
+}
 }
