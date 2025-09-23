@@ -6,7 +6,7 @@
  */
 
 import { WcagColorService } from '../src/utils/WcagColorService.js'
-import { WcagCheck } from '../src/utils/WcagCheck.js'
+import  WcagCheck from '../src/utils/WcagCheck.js'
 
 const wcagService = new WcagColorService()
 

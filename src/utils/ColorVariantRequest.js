@@ -8,11 +8,11 @@
 /**
  *
  */
-export class ColorVariantRequest {
+export default class ColorVariantRequest {
   /**
    * Creates an instance of ColorVariantRequest.
    *
-   * @param basecolor - The base color in hex format (e.g., '#RRGGBB').
+   * @param {string} basecolor - The base color in hex format (e.g., '#RRGGBB').
    */
   constructor (basecolor) {
     this.basecolor = basecolor

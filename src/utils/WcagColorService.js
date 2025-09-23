@@ -5,7 +5,9 @@
  * @version 1.0.0
  */
 
-import { WcagCheck } from './WcagCheck.js'
+import WcagCheck from './WcagCheck.js'
+import ColorVariantRequest from './ColorVariantRequest.js'
+
 /**
  * A Utility class for color manipulation and conversion.
  */
@@ -14,7 +16,7 @@ export class WcagColorService {
    * Returns the RGB representation of a hex color code.
    *
    * @param {string} hexColor - The hex color code (e.g., '#RRGGBB').
-   * @returns {object} An object containing the red, green, and blue components.
+   * @returns {{red: number, green: number, blue: number}} - The RGB components.
    */
   #hexToRgb (hexColor) {
     const hashlessHex = hexColor.slice(1)
@@ -28,24 +30,26 @@ export class WcagColorService {
   }
 
   /**
-   * Returns the hex representation of an RGB color.
+   * Converts a channel value (0-255) to its hexadecimal representation.
    *
-   * @param {object} - The RGB color object.
-   * @param -.red
-   * @param -.green
-   * @param -.blue
+   * @param {number} channelValue - The channel value (0-255).
+   * @returns {string} The hexadecimal representation of the channel value.
+   */
+  #toHex (channelValue) {
+    return channelValue.toString(16).padStart(2, '0')
+  }
+
+  /**
+   * Converts an RGB color object to its hex representation.
+   *
+   * @param {object} rgbColor - The RGB color object.
+   * @param {number} rgbColor.red - The red component (0-255).
+   * @param {number} rgbColor.green - The green component (0-255).
+   * @param {number} rgbColor.blue - The blue component (0-255).
    * @returns {string} The hex color code.
    */
   #rgbToHex ({ red, green, blue }) {
-    /**
-     *
-     * @param colorValue
-     */
-    const toHex = (colorValue) => {
-      return colorValue.toString(16).padStart(2, '0')
-    }
-
-    return `#${toHex(red)}${toHex(green)}${toHex(blue)}`
+    return `#${this.#toHex(red)}${this.#toHex(green)}${this.#toHex(blue)}`
   }
 
   /**
@@ -94,21 +98,36 @@ export class WcagColorService {
   /**
    * Checks if the contrast ratio between two colors meets the WCAG guidelines for a given level and text size.
    *
-   * @param {object} params - The parameters object. The object should contain the following properties:
-   * @param {string} params.foreground - The foreground color in hex format.
-   * @param {string} params.background - The background color in hex format.
-   * @param {string} [params.level='AA'] - The WCAG level to check against ('AA' or 'AAA').
-   * @param {boolean} [params.isLargeText=false] - Whether the text is considered large (18pt or 14pt bold).
-   * @param wcagCheck
+   * @param { WcagCheck } wcagCheck - An object containing the parameters for the WCAG check.
    * @returns {boolean} True if the colors pass the WCAG guidelines, false otherwise.
    */
   passesWcag (wcagCheck) {
-    const { foreground, background, level = 'AA', isLargeText = false } = wcagCheck
-    const ratio = this.contrastRatio(foreground, background)
+    const checkInstance = new WcagCheck(
+      wcagCheck.foreground,
+      wcagCheck.background,
+      { level: wcagCheck.level, isLargeText: wcagCheck.isLargeText }
+    )
 
-    if (isLargeText) return ratio >= 3
-    if (level === 'AAA') return ratio >= 7
+    const ratio = this.contrastRatio(checkInstance.foreground, checkInstance.background)
+
+    if (checkInstance.isLargeText) return ratio >= 3
+    if (checkInstance.level === 'AAA') return ratio >= 7
     return ratio >= 4.5
+  }
+
+  /**
+   * Checks if a color variant request is accessible according to WCAG guidelines.
+   *
+   * @param {ColorVariantRequest} request - The color variant request containing the base color and other parameters.
+   * @returns {boolean} True if the color variant is accessible, false otherwise.
+   */
+  isAccessible (request) {
+    const wcagCheck = new WcagCheck(
+      request.basecolor,
+      request.background,
+      { level: request.level, isLargeText: request.isLargeText }
+    )
+    return this.passesWcag(wcagCheck)
   }
 
   /**
@@ -166,16 +185,52 @@ export class WcagColorService {
   }
 
   /**
+   * Finds an accessible color variant based on the given request.
+   *
+   * @param {ColorVariantRequest} request - The color variant request containing the base color and other parameters.
+   * @returns {string|undefined} The accessible color variant in hex format, or undefined if no variant is found.
+   */
+  findAccessibleVariant (request) {
+    for (let factor = 0.1; factor <= 0.9; factor += 0.1) {
+      const adjusted = request.direction === 'lighten'
+        ? this.lightenColor(request.basecolor, factor)
+        : this.darkenColor(request.basecolor, factor)
+
+      const newRequest = new ColorVariantRequest(adjusted)
+        .withBackground(request.background)
+        .withLevel(request.level)
+        .withLargeText(request.isLargeText)
+
+      if (this.isAccessible(newRequest)) {
+        return adjusted
+      }
+    }
+    console.warn('No accessible variant found')
+  }
+
+  /**
    * Generates a color palette with lighter and darker shades of the base color.
    *
-   * @param {*} baseColor - The base hex color.
-   * @returns {object} An object containing the base, lighter, and darker colors.
+   * @param {ColorVariantRequest} request - The color variant request containing the base color.
+   * @returns {object} An object containing the base color, a lighter variant, and a darker variant.
    */
-  generatePalette (baseColor) {
+  generatePalette (request) {
+    const lighterRequest = new ColorVariantRequest(request)
+      .withBackground(request.background)
+      .withLevel(request.level)
+      .withLargeText(request.isLargeText)
+      .withDirection('lighten')
+
+    const darkerRequest = new ColorVariantRequest(request)
+      .withBackground(request.background)
+      .withLevel(request.level)
+      .withLargeText(request.isLargeText)
+      .withDirection('darken')
+
     return {
-      base: baseColor,
-      lighter: this.lightenColor(baseColor),
-      darker: this.darkenColor(baseColor)
+      base: request.basecolor,
+      lighter: this.findAccessibleVariant(lighterRequest),
+      darker: this.findAccessibleVariant(darkerRequest)
     }
   }
 }
