@@ -24,15 +24,23 @@ export class WcagColorService {
     const green = (decimalColorValue >> 8) & 255
     const blue = decimalColorValue & 255
 
-    return { red, green, blue } 
+    return { red, green, blue }
   }
 
   /**
    * Returns the hex representation of an RGB color.
-   * @param {*} param0 
+   *
+   * @param {object} - The RGB color object.
+   * @param -.red
+   * @param -.green
+   * @param -.blue
    * @returns {string} The hex color code.
    */
   #rgbToHex ({ red, green, blue }) {
+    /**
+     *
+     * @param colorValue
+     */
     const toHex = (colorValue) => {
       return colorValue.toString(16).padStart(2, '0')
     }
@@ -91,77 +99,83 @@ export class WcagColorService {
    * @param {string} params.background - The background color in hex format.
    * @param {string} [params.level='AA'] - The WCAG level to check against ('AA' or 'AAA').
    * @param {boolean} [params.isLargeText=false] - Whether the text is considered large (18pt or 14pt bold).
+   * @param wcagCheck
    * @returns {boolean} True if the colors pass the WCAG guidelines, false otherwise.
    */
-passesWcag (wcagCheck) {
-  const { foreground, background, level = 'AA', isLargeText = false } = wcagCheck
-  const ratio = this.contrastRatio(foreground, background)
+  passesWcag (wcagCheck) {
+    const { foreground, background, level = 'AA', isLargeText = false } = wcagCheck
+    const ratio = this.contrastRatio(foreground, background)
 
-  if (isLargeText) return ratio >= 3
-  if (level === 'AAA') return ratio >= 7
-  return ratio >= 4.5
-}
-
-/**
- * Adjusts the brightness of a color channel (R, G, or B).
- * @param {*} channelValue 
- * @param {*} adjustmentFactor 
- * @returns {number} The adjusted channel value, clamped between 0 and 255.
- */
-#adjustColorChannel(channelValue, adjustmentFactor) {
-  const adjustedValue = channelValue + (channelValue * adjustmentFactor)
-
-  return Math.round(Math.min(Math.max(adjustedValue, 0), 255))
-}
-
-/**
- * Adjusts the brightness of an RGB color.
- * @param {*} rgbColor 
- * @param {*} adjustmentFactor 
- * @returns {object} The adjusted RGB
- */
-#adjustColorBrightness(rgbColor, adjustmentFactor) {
-  return {
-    red: this.#adjustColorChannel(rgbColor.red, adjustmentFactor),
-    green: this.#adjustColorChannel(rgbColor.green, adjustmentFactor),
-    blue: this.#adjustColorChannel(rgbColor.blue, adjustmentFactor)
+    if (isLargeText) return ratio >= 3
+    if (level === 'AAA') return ratio >= 7
+    return ratio >= 4.5
   }
-}
 
-/**
- * Lightens a hex color by a given factor. Default factor 0.2 is 20% lighter.
- * @param {*} hexColor 
- * @param {*} factor 
- * @returns {string} The lightened hex color.
- */
-lightenColor(hexColor, factor = 0.2) {
-  const rgb = this.#hexToRgb(hexColor)
-  const lightenedColor = this.#adjustColorBrightness(rgb, factor)
-  return this.#rgbToHex(lightenedColor)
-}
+  /**
+   * Adjusts the brightness of a color channel (R, G, or B).
+   *
+   * @param {*} channelValue - The original channel value (0-255).
+   * @param {*} adjustmentFactor - The factor by which to adjust the channel value.
+   * @returns {number} The adjusted channel value, clamped between 0 and 255.
+   */
+  #adjustColorChannel (channelValue, adjustmentFactor) {
+    const adjustedValue = channelValue + (channelValue * adjustmentFactor)
 
-/**
- * Darkens a hex color by a given factor. Default factor 0.2 is 20% darker.
- * @param {*} hexColor 
- * @param {*} factor 
- * @returns {string} The darkened hex color.
- */
-darkenColor (hexColor, factor = 0.2) {
-  const rgb = this.#hexToRgb(hexColor)
-  const darkenedColor = this.#adjustColorBrightness(rgb, -factor)
-  return this.#rgbToHex(darkenedColor)
-}
-
-/**
- * Generates a color palette with lighter and darker shades of the base color.
- * @param {*} baseColor 
- * @returns 
- */
-generatePalette(baseColor) {
-  return {
-    base: baseColor,
-    lighter: this.lightenColor(baseColor),
-    darker: this.darkenColor(baseColor)
+    return Math.round(Math.min(Math.max(adjustedValue, 0), 255))
   }
-}
+
+  /**
+   * Adjusts the brightness of an RGB color.
+   *
+   * @param {*} rgbColor - The RGB color object.
+   * @param {*} adjustmentFactor - The factor by which to adjust the brightness (positive to lighten, negative to darken).
+   * @returns {object} The adjusted RGB color object.
+   */
+  #adjustColorBrightness (rgbColor, adjustmentFactor) {
+    return {
+      red: this.#adjustColorChannel(rgbColor.red, adjustmentFactor),
+      green: this.#adjustColorChannel(rgbColor.green, adjustmentFactor),
+      blue: this.#adjustColorChannel(rgbColor.blue, adjustmentFactor)
+    }
+  }
+
+  /**
+   * Lightens a hex color by a given factor. Default factor 0.2 is 20% lighter.
+   *
+   * @param {*} hexColor - The hex color to lighten.
+   * @param {*} factor - The factor by which to lighten the color.
+   * @returns {string} The lightened hex color.
+   */
+  lightenColor (hexColor, factor = 0.2) {
+    const rgb = this.#hexToRgb(hexColor)
+    const lightenedColor = this.#adjustColorBrightness(rgb, factor)
+    return this.#rgbToHex(lightenedColor)
+  }
+
+  /**
+   * Darkens a hex color by a given factor. Default factor 0.2 is 20% darker.
+   *
+   * @param {*} hexColor - The hex color to darken.
+   * @param {*} factor - The factor by which to darken the color.
+   * @returns {string} The darkened hex color.
+   */
+  darkenColor (hexColor, factor = 0.2) {
+    const rgb = this.#hexToRgb(hexColor)
+    const darkenedColor = this.#adjustColorBrightness(rgb, -factor)
+    return this.#rgbToHex(darkenedColor)
+  }
+
+  /**
+   * Generates a color palette with lighter and darker shades of the base color.
+   *
+   * @param {*} baseColor - The base hex color.
+   * @returns {object} An object containing the base, lighter, and darker colors.
+   */
+  generatePalette (baseColor) {
+    return {
+      base: baseColor,
+      lighter: this.lightenColor(baseColor),
+      darker: this.darkenColor(baseColor)
+    }
+  }
 }
