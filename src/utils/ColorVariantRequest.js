@@ -2,7 +2,7 @@
  * Utility class for the color variant requests.
  *
  * @author Smilla Sollén
- * @version 1.0.0
+ * @version 2.0.0
  */
 
 /**
@@ -16,21 +16,9 @@ export default class ColorVariantRequest {
    */
   constructor (basecolor) {
     this.basecolor = basecolor
-    this.background = '#FFFFFF'
     this.level = 'AA'
     this.isLargeText = false
     this.direction = 'lighten'
-  }
-
-  /**
-   * Sets the background color for the color variant request.
-   *
-   * @param {string} background - The background color in hex format (e.g., '#RRGGBB').
-   * @returns {ColorVariantRequest} The updated ColorVariantRequest instance.
-   */
-  withBackground (background) {
-    this.background = background
-    return this
   }
 
   /**

@@ -2,7 +2,7 @@
  * Test file for WcagColorService.js
  *
  * @author Smilla Sollén
- * @version 1.1.0
+ * @version 1.2.0
  */
 
 import { WcagColorService } from '../src/utils/WcagColorService.js'
@@ -23,12 +23,11 @@ const check2 = new WcagCheck('#FF0000', '#00FF00', { isLargeText: true })
 console.log(wcagService.passesWcag(check2)) // Expected: false
 
 console.log('--- Testing generatePalette ---')
-// skapa request
-const request = new ColorVariantRequest('#3498db')
-  .withBackground('#FFFFFF')
+// skapa request utan background
+const request = new ColorVariantRequest('#944B89')
   .withLevel('AA')
   .withLargeText(false)
 
 const palette = wcagService.generatePalette(request)
 console.log(palette)
-// Expected: { base: '#3498db', lighter: <accessible lighter>, darker: <accessible darker> }
+// Expected: { base: '#944B89', lighter: <accessible lighter>, darker: <accessible darker> }
