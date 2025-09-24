@@ -5,9 +5,9 @@
  * @version 1.0.0
  */
 
-import WcagCheck from './WcagCheck.js'
-import ColorVariantRequest from './ColorVariantRequest.js'
-import NoAccessibleColorError from './NoAccessileColorError.js'
+import WcagCheck from './utils/WcagCheck.js'
+import ColorVariantRequest from './utils/ColorVariantRequest.js'
+import NoAccessibleColorError from './errors/NoAccessibleColorError.js'
 
 /**
  * A Utility class for color manipulation and conversion.
@@ -216,7 +216,7 @@ generatePalette (request) {
   } catch (error) {
     if (error instanceof NoAccessibleColorError) {
       console.error(error.message)
-      lighterVariant = null // eller en fallback
+      lighterVariant = 'No accessible lighter color'
     } else {
       throw error
     }
