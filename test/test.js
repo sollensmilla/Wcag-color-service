@@ -5,7 +5,7 @@
  * @version 1.2.0
  */
 
-import { WcagColorService } from '../src/utils/WcagColorService.js'
+import { WcagColorService } from '../src/WcagColorService.js'
 import WcagCheck from '../src/utils/WcagCheck.js'
 import ColorVariantRequest from '../src/utils/ColorVariantRequest.js'
 

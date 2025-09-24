@@ -14,7 +14,7 @@ export default class ColorVariantRequest {
    *
    * @param {string} basecolor - The base color in hex format (e.g., '#RRGGBB').
    */
-  constructor (basecolor) {
+  constructor(basecolor) {
     this.basecolor = basecolor
     this.level = 'AA'
     this.isLargeText = false
@@ -27,7 +27,7 @@ export default class ColorVariantRequest {
    * @param {string} level - The WCAG level to check against ('AA' or 'AAA').
    * @returns {ColorVariantRequest} The updated ColorVariantRequest instance.
    */
-  withLevel (level) {
+  withLevel(level) {
     this.level = level
     return this
   }
@@ -38,7 +38,7 @@ export default class ColorVariantRequest {
    * @param {boolean} isLargeText - True if the text is large, false otherwise.
    * @returns {ColorVariantRequest} The updated ColorVariantRequest instance.
    */
-  withLargeText (isLargeText) {
+  withLargeText(isLargeText) {
     this.isLargeText = isLargeText
     return this
   }
@@ -49,7 +49,7 @@ export default class ColorVariantRequest {
    * @param {string} direction - The direction for the color variant ('lighten' or 'darken').
    * @returns {ColorVariantRequest} The updated ColorVariantRequest instance.
    */
-  withDirection (direction) {
+  withDirection(direction) {
     this.direction = direction
     return this
   }
