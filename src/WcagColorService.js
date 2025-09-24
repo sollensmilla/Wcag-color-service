@@ -19,7 +19,7 @@ export class WcagColorService {
    * @param {string} hexColor - The hex color code (e.g., '#RRGGBB').
    * @returns {{ red: number, green: number, blue: number }} - The RGB components.
    */
-  #hexToRgb (hexColor) {
+  #hexToRgb(hexColor) {
     const hexWithoutHash = hexColor.slice(1)
     const decimalValue = parseInt(hexWithoutHash, 16)
 
@@ -36,7 +36,7 @@ export class WcagColorService {
    * @param {{ red: number, green: number, blue: number }} rgbColor
    * @returns {string} - Hex color string.
    */
-  #rgbToHex ({ red, green, blue }) {
+  #rgbToHex({ red, green, blue }) {
     const toHex = (channelValue) => channelValue.toString(16).padStart(2, '0')
     return `#${toHex(red)}${toHex(green)}${toHex(blue)}`
   }
@@ -47,7 +47,7 @@ export class WcagColorService {
    * @param {string} hexColor
    * @returns {{ hue: number, saturation: number, lightness: number }}
    */
-  #hexToHsl (hexColor) {
+  #hexToHsl(hexColor) {
     const { red, green, blue } = this.#hexToRgb(hexColor)
     const r = red / 255
     const g = green / 255
@@ -87,7 +87,7 @@ export class WcagColorService {
    * @param {{ hue: number, saturation: number, lightness: number }} hslColor
    * @returns {string}
    */
-  #hslToHex ({ hue, saturation, lightness }) {
+  #hslToHex({ hue, saturation, lightness }) {
     const hueToRgb = (p, q, t) => {
       if (t < 0) t += 1
       if (t > 1) t -= 1
@@ -124,7 +124,7 @@ export class WcagColorService {
    * @param {number} factor - How much to lighten (0.2 = +20%).
    * @returns {string}
    */
-  lightenColor (hexColor, factor = 0.2) {
+  lightenColor(hexColor, factor = 0.2) {
     const hslColor = this.#hexToHsl(hexColor)
     hslColor.lightness = Math.min(1, hslColor.lightness + factor)
     return this.#hslToHex(hslColor)
@@ -137,7 +137,7 @@ export class WcagColorService {
    * @param {number} factor - How much to darken (0.2 = -20%).
    * @returns {string}
    */
-  darkenColor (hexColor, factor = 0.2) {
+  darkenColor(hexColor, factor = 0.2) {
     const hslColor = this.#hexToHsl(hexColor)
     hslColor.lightness = Math.max(0, hslColor.lightness - factor)
     return this.#hslToHex(hslColor)
@@ -149,7 +149,7 @@ export class WcagColorService {
    * @param {{ red: number, green: number, blue: number }} rgbColor
    * @returns {number}
    */
-  #relativeLuminance ({ red, green, blue }) {
+  #relativeLuminance({ red, green, blue }) {
     const normalize = [red, green, blue].map(value => value / 255)
     const linearRgb = normalize.map(value =>
       value <= 0.03928 ? value / 12.92 : Math.pow((value + 0.055) / 1.055, 2.4)
@@ -161,7 +161,7 @@ export class WcagColorService {
     )
   }
 
-  contrastRatio (foreground, background) {
+  contrastRatio(foreground, background) {
     const luminanceForeground = this.#relativeLuminance(this.#hexToRgb(foreground))
     const luminanceBackground = this.#relativeLuminance(this.#hexToRgb(background))
     const brightest = Math.max(luminanceForeground, luminanceBackground)
@@ -169,14 +169,14 @@ export class WcagColorService {
     return (brightest + 0.05) / (darkest + 0.05)
   }
 
-  passesWcag (wcagCheck) {
+  passesWcag(wcagCheck) {
     const ratio = this.contrastRatio(wcagCheck.foreground, wcagCheck.background)
     if (wcagCheck.isLargeText) return ratio >= 3
     if (wcagCheck.level === 'AAA') return ratio >= 7
     return ratio >= 4.5
   }
 
-  isAccessible (request, candidate) {
+  isAccessible(request, candidate) {
     const wcagCheck = new WcagCheck(
       candidate,
       request.basecolor,
@@ -185,7 +185,7 @@ export class WcagColorService {
     return this.passesWcag(wcagCheck)
   }
 
-  findAccessibleVariant (request) {
+  findAccessibleVariant(request) {
     for (let factor = 0.1; factor <= 1.0; factor += 0.1) {
       const candidate = request.direction === 'lighten'
         ? this.lightenColor(request.basecolor, factor)
@@ -198,45 +198,33 @@ export class WcagColorService {
     throw new NoAccessibleColorError(request.basecolor, request.direction)
   }
 
-generatePalette (request) {
-  const lighterRequest = new ColorVariantRequest(request.basecolor)
-    .withLevel(request.level)
-    .withLargeText(request.isLargeText)
-    .withDirection('lighten')
+  #createVariantRequest(request, direction) {
+    return new ColorVariantRequest(request.basecolor)
+      .withLevel(request.level)
+      .withLargeText(request.isLargeText)
+      .withDirection(direction)
+  }
 
-  const darkerRequest = new ColorVariantRequest(request.basecolor)
-    .withLevel(request.level)
-    .withLargeText(request.isLargeText)
-    .withDirection('darken')
-
-  let lighterVariant, darkerVariant
-
-  try {
-    lighterVariant = this.findAccessibleVariant(lighterRequest)
-  } catch (error) {
-    if (error instanceof NoAccessibleColorError) {
+  #getVariantOrFallback(request, fallbackMessage) {
+    try {
+      return this.findAccessibleVariant(request)
+    } catch (error) {
       console.error(error.message)
-      lighterVariant = 'No accessible lighter color'
-    } else {
-      throw error
+      return fallbackMessage
     }
   }
 
-  try {
-    darkerVariant = this.findAccessibleVariant(darkerRequest)
-  } catch (error) {
-    if (error instanceof NoAccessibleColorError) {
-      console.error(error.message)
-      darkerVariant = 'No accessible darker color'
-    } else {
-      throw error
+  generatePalette(request) {
+    const lighterRequest = this.#createVariantRequest(request, 'lighten')
+    const darkerRequest = this.#createVariantRequest(request, 'darken')
+
+    const lighterVariant = this.#getVariantOrFallback(lighterRequest, 'No accessible lighter variant found')
+    const darkerVariant = this.#getVariantOrFallback(darkerRequest, 'No accessible darker variant found')
+
+    return {
+      base: request.basecolor,
+      lighter: lighterVariant,
+      darker: darkerVariant
     }
   }
-
-  return {
-    base: request.basecolor,
-    lighter: lighterVariant,
-    darker: darkerVariant
-  }
- }
 }
