@@ -7,6 +7,7 @@
 
 import WcagCheck from './WcagCheck.js'
 import ColorVariantRequest from './ColorVariantRequest.js'
+import NoAccessibleColorError from './NoAccessileColorError.js'
 
 /**
  * A Utility class for color manipulation and conversion.
@@ -194,24 +195,48 @@ export class WcagColorService {
         return candidate
       }
     }
-    console.warn('No accessible variant found for', request.basecolor, request.direction)
+    throw new NoAccessibleColorError(request.basecolor, request.direction)
   }
 
-  generatePalette (request) {
-    const lighterRequest = new ColorVariantRequest(request.basecolor)
-      .withLevel(request.level)
-      .withLargeText(request.isLargeText)
-      .withDirection('lighten')
+generatePalette (request) {
+  const lighterRequest = new ColorVariantRequest(request.basecolor)
+    .withLevel(request.level)
+    .withLargeText(request.isLargeText)
+    .withDirection('lighten')
 
-    const darkerRequest = new ColorVariantRequest(request.basecolor)
-      .withLevel(request.level)
-      .withLargeText(request.isLargeText)
-      .withDirection('darken')
+  const darkerRequest = new ColorVariantRequest(request.basecolor)
+    .withLevel(request.level)
+    .withLargeText(request.isLargeText)
+    .withDirection('darken')
 
-    return {
-      base: request.basecolor,
-      lighter: this.findAccessibleVariant(lighterRequest),
-      darker: this.findAccessibleVariant(darkerRequest)
+  let lighterVariant, darkerVariant
+
+  try {
+    lighterVariant = this.findAccessibleVariant(lighterRequest)
+  } catch (error) {
+    if (error instanceof NoAccessibleColorError) {
+      console.error(error.message)
+      lighterVariant = null // eller en fallback
+    } else {
+      throw error
     }
   }
+
+  try {
+    darkerVariant = this.findAccessibleVariant(darkerRequest)
+  } catch (error) {
+    if (error instanceof NoAccessibleColorError) {
+      console.error(error.message)
+      darkerVariant = 'No accessible darker color'
+    } else {
+      throw error
+    }
+  }
+
+  return {
+    base: request.basecolor,
+    lighter: lighterVariant,
+    darker: darkerVariant
+  }
+ }
 }
