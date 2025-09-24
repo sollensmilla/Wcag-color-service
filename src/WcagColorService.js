@@ -218,8 +218,8 @@ export class WcagColorService {
     const lighterRequest = this.#createVariantRequest(request, 'lighten')
     const darkerRequest = this.#createVariantRequest(request, 'darken')
 
-    const lighterVariant = this.#getVariantOrFallback(lighterRequest, null)
-    const darkerVariant = this.#getVariantOrFallback(darkerRequest, null)
+    const lighterVariant = this.#getVariantOrFallback(lighterRequest, 'No accessible lighter variant found')
+    const darkerVariant = this.#getVariantOrFallback(darkerRequest, 'No accessible darker variant found')
 
     return {
       base: request.basecolor,
