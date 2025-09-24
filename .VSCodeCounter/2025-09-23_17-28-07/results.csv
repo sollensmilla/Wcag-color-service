@@ -1,0 +1,9 @@
+"filename", "language", "JavaScript", "JSON", "Markdown", "comment", "blank", "total"
+"/Users/smill/Desktop/1dv610/L2/README.md", "Markdown", 0, 0, 8, 0, 4, 12
+"/Users/smill/Desktop/1dv610/L2/index.js", "JavaScript", 0, 0, 0, 0, 1, 1
+"/Users/smill/Desktop/1dv610/L2/package.json", "JSON", 0, 24, 0, 0, 1, 25
+"/Users/smill/Desktop/1dv610/L2/src/utils/ColorVariantRequest.js", "JavaScript", 25, 0, 0, 38, 6, 69
+"/Users/smill/Desktop/1dv610/L2/src/utils/WcagCheck.js", "JavaScript", 8, 0, 0, 17, 2, 27
+"/Users/smill/Desktop/1dv610/L2/src/utils/WcagColorService.js", "JavaScript", 110, 0, 0, 99, 28, 237
+"/Users/smill/Desktop/1dv610/L2/test/test.js", "JavaScript", 13, 0, 0, 6, 7, 26
+"Total", "-", 156, 24, 8, 160, 49, 397

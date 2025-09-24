@@ -215,22 +215,22 @@ export class WcagColorService {
    * @returns {object} An object containing the base color, a lighter variant, and a darker variant.
    */
   generatePalette (request) {
-    const lighterRequest = new ColorVariantRequest(request)
-      .withBackground(request.background)
-      .withLevel(request.level)
-      .withLargeText(request.isLargeText)
-      .withDirection('lighten')
+  const lighterRequest = new ColorVariantRequest(request.basecolor)
+    .withBackground(request.background)
+    .withLevel(request.level)
+    .withLargeText(request.isLargeText)
+    .withDirection('lighten')
 
-    const darkerRequest = new ColorVariantRequest(request)
-      .withBackground(request.background)
-      .withLevel(request.level)
-      .withLargeText(request.isLargeText)
-      .withDirection('darken')
+  const darkerRequest = new ColorVariantRequest(request.basecolor)
+    .withBackground(request.background)
+    .withLevel(request.level)
+    .withLargeText(request.isLargeText)
+    .withDirection('darken')
 
-    return {
-      base: request.basecolor,
-      lighter: this.findAccessibleVariant(lighterRequest),
-      darker: this.findAccessibleVariant(darkerRequest)
-    }
+  return {
+    base: request.basecolor,
+    lighter: this.findAccessibleVariant(lighterRequest),
+    darker: this.findAccessibleVariant(darkerRequest)
   }
+}
 }

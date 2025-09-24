@@ -6,7 +6,7 @@
  */
 
 /**
- *
+ * Class representing a color variant request.
  */
 export default class ColorVariantRequest {
   /**
