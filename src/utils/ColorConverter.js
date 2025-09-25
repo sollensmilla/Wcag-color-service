@@ -24,38 +24,20 @@ export default class ColorConverter {
 
   hexToHsl(hexColor) {
     const { red, green, blue } = this.hexToRgb(hexColor)
-    const r = red / 255
-    const g = green / 255
-    const b = blue / 255
+    const normalizedRgb = this.#normalizeRgb({ red, green, blue })
 
-    const max = Math.max(r, g, b)
-    const min = Math.min(r, g, b)
-    const lightness = (max + min) / 2
+    const { maxColorValue, minColorValue } = this.#findExtremes(normalizedRgb)
+    const lightness = this.#calculateLightness(maxColorValue, minColorValue)
 
-    if (max === min) {
+    if (maxColorValue === minColorValue) {
       return { hue: 0, saturation: 0, lightness }
     }
 
-    const delta = max - min
-    const saturation =
-      lightness > 0.5
-        ? delta / (2 - max - min)
-        : delta / (max + min)
+    const colorRange = maxColorValue - minColorValue
+    const saturation = this.#calculateSaturation(lightness, colorRange, maxColorValue, minColorValue)
+    const hue = this.#calculateHue(normalizedRgb, maxColorValue, colorRange)
 
-    let hue
-    switch (max) {
-      case r:
-        hue = (g - b) / delta + (g < b ? 6 : 0)
-        break
-      case g:
-        hue = (b - r) / delta + 2
-        break
-      case b:
-        hue = (r - g) / delta + 4
-        break
-    }
-
-    return { hue: hue / 6, saturation, lightness }
+    return { hue, saturation, lightness }
   }
 
   hslToHex({ hue, saturation, lightness }) {
@@ -64,15 +46,11 @@ export default class ColorConverter {
       return this.rgbToHex({ red: gray, green: gray, blue: gray })
     }
 
-    const temp2 =
-      lightness < 0.5
-        ? lightness * (1 + saturation)
-        : lightness + saturation - lightness * saturation
-    const temp1 = 2 * lightness - temp2
+    const [minLightnessFactor, maxLightnessFactor] = this.#calculateTempValues(lightness, saturation)
 
-    const red = this.#hueToChannel(temp1, temp2, hue + 1 / 3)
-    const green = this.#hueToChannel(temp1, temp2, hue)
-    const blue = this.#hueToChannel(temp1, temp2, hue - 1 / 3)
+    const red = this.#hueToChannel(minLightnessFactor, maxLightnessFactor, hue + 1 / 3)
+    const green = this.#hueToChannel(minLightnessFactor, maxLightnessFactor, hue)
+    const blue = this.#hueToChannel(minLightnessFactor, maxLightnessFactor, hue - 1 / 3)
 
     return this.rgbToHex({
       red: Math.round(red * 255),
@@ -81,16 +59,56 @@ export default class ColorConverter {
     })
   }
 
-  /**
-   * Helper function for HSL to RGB conversion to get individual color channels.
-   */
-  #hueToChannel(temp1, temp2, hueFraction) {
-    if (hueFraction < 0) hueFraction += 1
-    if (hueFraction > 1) hueFraction -= 1
+ #normalizeRgb({ red, green, blue }) {
+    return { r: red / 255, g: green / 255, b: blue / 255 }
+  }
 
-    if (hueFraction < 1 / 6) return temp1 + (temp2 - temp1) * 6 * hueFraction
-    if (hueFraction < 1 / 2) return temp2
-    if (hueFraction < 2 / 3) return temp1 + (temp2 - temp1) * (2 / 3 - hueFraction) * 6
-    return temp1
+  #findExtremes({ r, g, b }) {
+    return { maxColorValue: Math.max(r, g, b), minColorValue: Math.min(r, g, b) }
+  }
+
+  #calculateLightness(maxColorValue, minColorValue) {
+    return (maxColorValue + minColorValue) / 2
+  }
+
+  #calculateSaturation(lightness, colorRange, maxColorValue, minColorValue) {
+    return lightness > 0.5
+      ? colorRange / (2 - maxColorValue - minColorValue)
+      : colorRange / (maxColorValue + minColorValue)
+  }
+
+  #calculateHue({ r, g, b }, maxColorValue, colorRange) {
+    let hue
+    switch (maxColorValue) {
+      case r:
+        hue = (g - b) / colorRange + (g < b ? 6 : 0)
+        break
+      case g:
+        hue = (b - r) / colorRange + 2
+        break
+      case b:
+        hue = (r - g) / colorRange + 4
+        break
+    }
+    return hue / 6
+  }
+
+  #calculateTempValues(lightness, saturation) {
+    const maxLightnessFactor =
+      lightness < 0.5
+        ? lightness * (1 + saturation)
+        : lightness + saturation - lightness * saturation
+    const minLightnessFactor = 2 * lightness - maxLightnessFactor
+    return [minLightnessFactor, maxLightnessFactor]
+  }
+
+  #hueToChannel(minLightnessFactor, maxLightnessFactor, adjustedHue) {
+    if (adjustedHue < 0) adjustedHue += 1
+    if (adjustedHue > 1) adjustedHue -= 1
+
+    if (adjustedHue < 1 / 6) return minLightnessFactor + (maxLightnessFactor - minLightnessFactor) * 6 * adjustedHue
+    if (adjustedHue < 1 / 2) return maxLightnessFactor
+    if (adjustedHue < 2 / 3) return minLightnessFactor + (maxLightnessFactor - minLightnessFactor) * (2 / 3 - adjustedHue) * 6
+    return minLightnessFactor
   }
 }

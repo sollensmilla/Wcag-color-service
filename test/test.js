@@ -24,7 +24,7 @@ console.log(wcagService.passesWcag(check2)) // Expected: false
 
 console.log('--- Testing generatePalette ---')
 // skapa request utan background
-const request = new ColorVariantRequest('#944B89')
+const request = new ColorVariantRequest('#a34b96')
   .withLevel('AA')
   .withLargeText(false)
 
