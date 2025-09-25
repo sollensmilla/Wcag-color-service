@@ -1,153 +1,33 @@
 /**
- * Utility class for color manipulation and conversion according to WCAG guidelines.
+ * WCAG Color Service
  *
  * @author Smilla Sollén
  * @version 1.0.0
  */
-
+import ColorConverter from './utils/ColorConverter.js'
 import WcagCheck from './utils/WcagCheck.js'
 import ColorVariantRequest from './utils/ColorVariantRequest.js'
 import NoAccessibleColorError from './errors/NoAccessibleColorError.js'
 
-/**
- * A Utility class for color manipulation and conversion.
- */
 export class WcagColorService {
-  /**
-   * Converts a hex color to an RGB object.
-   *
-   * @param {string} hexColor - The hex color code (e.g., '#RRGGBB').
-   * @returns {{ red: number, green: number, blue: number }} - The RGB components.
-   */
-  #hexToRgb(hexColor) {
-    const hexWithoutHash = hexColor.slice(1)
-    const decimalValue = parseInt(hexWithoutHash, 16)
-
-    const red = (decimalValue >> 16) & 255
-    const green = (decimalValue >> 8) & 255
-    const blue = decimalValue & 255
-
-    return { red, green, blue }
+  constructor() {
+    this.colorConverter = new ColorConverter()
   }
 
-  /**
-   * Converts an RGB object to hex.
-   *
-   * @param {{ red: number, green: number, blue: number }} rgbColor
-   * @returns {string} - Hex color string.
-   */
-  #rgbToHex({ red, green, blue }) {
-    const toHex = (channelValue) => channelValue.toString(16).padStart(2, '0')
-    return `#${toHex(red)}${toHex(green)}${toHex(blue)}`
-  }
-
-  /**
-   * Converts a hex color to HSL.
-   *
-   * @param {string} hexColor
-   * @returns {{ hue: number, saturation: number, lightness: number }}
-   */
-  #hexToHsl(hexColor) {
-    const { red, green, blue } = this.#hexToRgb(hexColor)
-    const r = red / 255
-    const g = green / 255
-    const b = blue / 255
-
-    const max = Math.max(r, g, b)
-    const min = Math.min(r, g, b)
-    let hue, saturation
-    let lightness = (max + min) / 2
-
-    if (max === min) {
-      hue = saturation = 0
-    } else {
-      const delta = max - min
-      saturation = lightness > 0.5 ? delta / (2 - max - min) : delta / (max + min)
-
-      switch (max) {
-        case r:
-          hue = (g - b) / delta + (g < b ? 6 : 0)
-          break
-        case g:
-          hue = (b - r) / delta + 2
-          break
-        case b:
-          hue = (r - g) / delta + 4
-          break
-      }
-      hue /= 6
-    }
-
-    return { hue, saturation, lightness }
-  }
-
-  /**
-   * Converts an HSL color to hex.
-   *
-   * @param {{ hue: number, saturation: number, lightness: number }} hslColor
-   * @returns {string}
-   */
-  #hslToHex({ hue, saturation, lightness }) {
-    const hueToRgb = (p, q, t) => {
-      if (t < 0) t += 1
-      if (t > 1) t -= 1
-      if (t < 1 / 6) return p + (q - p) * 6 * t
-      if (t < 1 / 2) return q
-      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6
-      return p
-    }
-
-    let r, g, b
-    if (saturation === 0) {
-      r = g = b = lightness
-    } else {
-      const q = lightness < 0.5
-        ? lightness * (1 + saturation)
-        : lightness + saturation - lightness * saturation
-      const p = 2 * lightness - q
-      r = hueToRgb(p, q, hue + 1 / 3)
-      g = hueToRgb(p, q, hue)
-      b = hueToRgb(p, q, hue - 1 / 3)
-    }
-
-    return this.#rgbToHex({
-      red: Math.round(r * 255),
-      green: Math.round(g * 255),
-      blue: Math.round(b * 255)
-    })
-  }
-
-  /**
-   * Lightens a color by increasing its HSL lightness.
-   *
-   * @param {string} hexColor
-   * @param {number} factor - How much to lighten (0.2 = +20%).
-   * @returns {string}
-   */
   lightenColor(hexColor, factor = 0.2) {
-    const hslColor = this.#hexToHsl(hexColor)
+    const hslColor = this.colorConverter.hexToHsl(hexColor)
     hslColor.lightness = Math.min(1, hslColor.lightness + factor)
-    return this.#hslToHex(hslColor)
+    return this.colorConverter.hslToHex(hslColor)
   }
 
-  /**
-   * Darkens a color by decreasing its HSL lightness.
-   *
-   * @param {string} hexColor
-   * @param {number} factor - How much to darken (0.2 = -20%).
-   * @returns {string}
-   */
   darkenColor(hexColor, factor = 0.2) {
-    const hslColor = this.#hexToHsl(hexColor)
+    const hslColor = this.colorConverter.hexToHsl(hexColor)
     hslColor.lightness = Math.max(0, hslColor.lightness - factor)
-    return this.#hslToHex(hslColor)
+    return this.colorConverter.hslToHex(hslColor)
   }
 
   /**
    * Calculates relative luminance according to WCAG.
-   *
-   * @param {{ red: number, green: number, blue: number }} rgbColor
-   * @returns {number}
    */
   #relativeLuminance({ red, green, blue }) {
     const normalize = [red, green, blue].map(value => value / 255)
@@ -161,9 +41,16 @@ export class WcagColorService {
     )
   }
 
+  /**
+   * Calculates the contrast ratio between two colors.
+   */
   contrastRatio(foreground, background) {
-    const luminanceForeground = this.#relativeLuminance(this.#hexToRgb(foreground))
-    const luminanceBackground = this.#relativeLuminance(this.#hexToRgb(background))
+    const fg = this.colorConverter.hexToRgb(foreground)
+    const bg = this.colorConverter.hexToRgb(background)
+
+    const luminanceForeground = this.#relativeLuminance(fg)
+    const luminanceBackground = this.#relativeLuminance(bg)
+
     const brightest = Math.max(luminanceForeground, luminanceBackground)
     const darkest = Math.min(luminanceForeground, luminanceBackground)
     return (brightest + 0.05) / (darkest + 0.05)
@@ -218,13 +105,10 @@ export class WcagColorService {
     const lighterRequest = this.#createVariantRequest(request, 'lighten')
     const darkerRequest = this.#createVariantRequest(request, 'darken')
 
-    const lighterVariant = this.#getVariantOrFallback(lighterRequest, 'No accessible lighter variant found')
-    const darkerVariant = this.#getVariantOrFallback(darkerRequest, 'No accessible darker variant found')
-
     return {
       base: request.basecolor,
-      lighter: lighterVariant,
-      darker: darkerVariant
+      lighter: this.#getVariantOrFallback(lighterRequest, 'No accessible lighter variant found'),
+      darker: this.#getVariantOrFallback(darkerRequest, 'No accessible darker variant found')
     }
   }
 }
