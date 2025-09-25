@@ -1,7 +1,7 @@
 {
-  "name": "l2",
+  "name": "wcag-color-service",
   "version": "1.0.0",
-  "description": "The second assignment in the course 1V610 at Linneuas univeristy. This is a small JavaScript library that generates WCAG-compliant light/dark variants from any base color.",
+  "description": "A service for generating WCAG-compliant color palettes.",
   "type": "module",
   "main": "index.js",
   "scripts": {
@@ -10,13 +10,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sollensmilla/L2.git"
+    "url": "git+https://github.com/sollensmilla/Wcag-color-service.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "wcag",
+    "color",
+    "accessibility",
+    "contrast",
+    "palette"
+  ],
+  "author": "Smilla Sollén",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/sollensmilla/L2/issues"
+    "url": "https://github.com/sollensmilla/Wcag-color-service/issues"
   },
-  "homepage": "https://github.com/sollensmilla/L2#readme"
+  "homepage": "https://github.com/sollensmilla/Wcag-color-service#readme"
 }
