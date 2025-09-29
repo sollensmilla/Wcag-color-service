@@ -92,7 +92,7 @@ If you encounter a bug or want to request a new feature:
 
 - Include steps to reproduce and, if possible, example code
 
-For known issues, see [Bug Reports](./docs/bug-report.md)
+For known issues, see [Bug Report](./docs/bug-report.md)
 
 ## Versioning
 
