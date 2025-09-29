@@ -1,7 +1,7 @@
 # Test Report for `WcagColorService.js`
 
 **Author:** Smilla Sollén
-**Version:** 1.2.0
+**Version:** 1.0.0
 **Date:** September 29, 2025
 
 ---
