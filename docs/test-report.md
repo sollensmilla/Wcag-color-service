@@ -4,6 +4,20 @@
 **Version:** 1.0.0
 **Date:** September 29, 2025
 
+## Summary table of the WcagColorService testing
+
+The `WcagColorService.js` module was manually tested with Node.js (`npm test`) to verify contrast calculation, WCAG compliance, palette generation, library integration, and error handling.  
+
+| What was tested / Method or Requirement | How it was tested | Test Result |
+|----------------------------------------|-----------------|-------------|
+| Contrast Ratio Calculation (`contrastRatio`) | Compared `#FFFFFF` vs `#000000` and `#FF0000` vs `#00FF00` | ✅ Passed |
+| WCAG Compliance Check (`passesWcag`) | Tested White vs Black (AAA) and Red vs Green (Large Text) | ✅ Passed |
+| Palette Generation (`generatePalette`) | Generated palette for `#a34b96`, Level AA, Large Text false | ⚠️ Partially Passed |
+| Library Integration | Imported module into another project, generated palette for `#3498db` | ⚠️ Partially Passed |
+| Error Handling – Invalid Hex Input | Passed invalid hex `"red"` to ColorConverter | ✅ Passed |
+| Error Handling – No Accessible Variant | Tried generating inaccessible lighter/darker variants | ✅ Passed |
+
+
 ---
 
 ## 1. Introduction
