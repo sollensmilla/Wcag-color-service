@@ -1,12 +1,12 @@
 # WCAG Color Service
 
 WCAG Color Service is a lightweight JavaScript library designed to help developers generate accessible color palettes that meet [WCAG 2.1](https://www.w3.org/TR/WCAG21/) contrast guidelines.  
-It simplifies the process of ensuring color contrast compliance, making it easier to build inclusive and accessible user interfaces.
+It simplifies the process of finding suitable complementary colors in a nice palette while still being accessible and easy to read.
 
 ---
 
 ## Features
-- Generate WCAG-compliant color palettes automatically
+- Generate WCAG-compliant color palettes automatically from only one hex-color
 - Support for multiple WCAG levels (AA, AAA)
 - Handles both normal text and large text accessibility
 - Small, dependency-free, and easy to integrate
@@ -87,9 +87,9 @@ If you encounter a bug or want to request a new feature:
 
 - Create a GitHub issue
 
-- - Describe the problem clearly
+- Describe the problem clearly
 
-Include steps to reproduce and, if possible, example code
+- Include steps to reproduce and, if possible, example code
 
 For known issues, see Bug Reports
 
@@ -98,7 +98,7 @@ For known issues, see Bug Reports
 This project uses Semantic Versioning (SemVer).
 
 | Versionm Type | Example     | When To Use|
-|---------------|-------------|            |
+|---------------|-------------| ---------|
 | PATCH         |1.0.0 → 1.0.1| Bug fixes, no breaking changes   |
 | MINOR         |1.0.0 → 1.1.0| New features, backwards compatible|
 | MAJOR         |1.0.0 → 2.0.0| Breaking changes                  |
