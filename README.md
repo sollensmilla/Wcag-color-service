@@ -79,7 +79,8 @@ Everything inside utils/ is considered internal and should not be accessed direc
 
 ## Testing
 
-This project has been **manually tested**. You can read the detailed test reports, see Test Reports.
+This project has been **manually tested**. 
+You can read the detailed test reports here: [Test Report](./docs/test-report.md)
 
 ## Bug Reports & Issues
 
@@ -128,7 +129,7 @@ See LICENSE for full details.
 ## Additional Documentation
 - Examples
 
-- Test Reports
+- [Test Reports](./docs/test-report.md)
 
 - Bug Reports
 
