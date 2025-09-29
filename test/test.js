@@ -31,3 +31,26 @@ const request = new ColorVariantRequest('#a34b96')
 const palette = wcagService.generatePalette(request)
 console.log(palette)
 // Expected: { base: '#944B89', lighter: <accessible lighter>, darker: <accessible darker> }
+
+console.log('--- Testing invalid hex inputs ---')
+
+try {
+  wcagService.contrastRatio('red', '#000000') // Not a hex color
+} catch (error) {
+  console.log(error instanceof Error) // true
+  console.log(error.name) // Expected: InvalidHexColorError
+  console.log(error.message) // Expected: Invalid hex color provided: "red"
+}
+
+try {
+  wcagService.contrastRatio('#12', '#000000') // Too short
+} catch (error) {
+  console.log(error.name) // Expected: InvalidHexColorError
+}
+
+try {
+  wcagService.contrastRatio('#GGGGGG', '#000000') // Invalid characters
+  console.log(error.name) // Expected: InvalidHexColorError
+} catch (error) {
+  console.log(error.name) // Expected: InvalidHexColorError
+}

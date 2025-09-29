@@ -5,10 +5,25 @@
  * @version 2.0.0
  */
 
+import InvalidHexColorError from '../errors/InvalidHexColorError.js'
+
 export default class ColorConverter {
+  isValidHexColor(hexColor) {
+    return /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(hexColor)
+  }
+
   hexToRgb(hexColor) {
+    if (!this.isValidHexColor(hexColor)) {
+      throw new InvalidHexColorError(hexColor)
+    }
+
     const hexWithoutHash = hexColor.slice(1)
-    const decimalValue = parseInt(hexWithoutHash, 16)
+
+    const fullHex = hexWithoutHash.length === 3
+    ? hexWithoutHash.split('').map(c => c + c).join('')
+    : hexWithoutHash
+
+    const decimalValue = parseInt(fullHex, 16)
 
     return {
       red: (decimalValue >> 16) & 255,
