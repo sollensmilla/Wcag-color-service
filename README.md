@@ -127,7 +127,6 @@ This project is licensed under the MIT License.
 See [LICENSE](./LISCENSE) for full details.
 
 ## Additional Documentation
-- Examples
 
 - [Test Report](./docs/test-report.md)
 
