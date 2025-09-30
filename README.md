@@ -109,7 +109,7 @@ Current version: **1.0.0**
 ## Contributing
 
 We welcome contributions from the community!
-Before contributing, please read the Contributing Guidelines
+Before contributing, please read the [Contributing Guidelines](./docs/contribution-guidelines.md)
 
 **How to contribute:**
 1. Fork the repository
@@ -124,7 +124,7 @@ Before contributing, please read the Contributing Guidelines
 
 ## License
 This project is licensed under the MIT License.
-See LICENSE for full details.
+See [LICENSE](./LISCENSE) for full details.
 
 ## Additional Documentation
 - Examples
@@ -133,7 +133,7 @@ See LICENSE for full details.
 
 - [Bug Report](./docs/bug-report.md)
 
-- Contributing Guidelines
+- [Contribution Guidelines](./docs/contribution-guidelines.md)
 
 ## Summary for Developers
 
