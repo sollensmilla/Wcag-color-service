@@ -1,0 +1,6 @@
+# Reflections on chapter 3
+I think I struggle a lot with sometimes writing functions that are too long and not keeping them **small**, and then not being sure which parts to break out without accidentally ruining code that already works. My biggest takeaway from chapter 3 is challenging myself to dare to refactor methods and functions even though they already work.
+
+I agree a lot with the book that functions should only **do one thing**, but it is sometimes hard to put into practice. It often feels like I find new functionality that could be broken out every time I look at a method, so this is something I want to get better at. That said, I think it can be acceptable for a function to do two very small things if the function remains short and the functionality is not repeated—maybe not for this course though (;
+
+I also agree that keeping the number of arguments down is a good practice and makes code easier to read, but I don’t fully agree that one argument should always be the “ultimate” number. As long as the arguments are clear and not booleans (which I agree is ugly), I think two arguments are perfectly fine. For example, a function like `calculateDistance(pointA, pointB)` makes sense with two arguments, since the meaning would be less clear if forced into one.
