@@ -124,7 +124,7 @@ Before contributing, please read the [Contributing Guidelines](./docs/contributi
 
 ## License
 This project is licensed under the MIT License.
-See [LICENSE](./LISCENSE) for full details.
+See [LICENSE](./LICENSE) for full details.
 
 ## Additional Documentation
 

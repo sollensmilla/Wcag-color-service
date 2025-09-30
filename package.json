@@ -12,6 +12,12 @@
     "type": "git",
     "url": "git+https://github.com/sollensmilla/Wcag-color-service.git"
   },
+  "files": [
+  "index.js",
+  "src/",
+  "README.md",
+  "LICENSE"
+],
   "keywords": [
     "wcag",
     "color",
