@@ -109,7 +109,7 @@ Current version: **1.0.0**
 ## Contributing
 
 We welcome contributions from the community!
-Before contributing, please read the [Contributing Guidelines](./docs/contribution-guidelines.md)
+Before contributing, please read the [Contributing Guidelines](./docs/contributing-guidelines.md)
 
 **How to contribute:**
 1. Fork the repository
@@ -133,7 +133,7 @@ See [LICENSE](./LISCENSE) for full details.
 
 - [Bug Report](./docs/bug-report.md)
 
-- [Contribution Guidelines](./docs/contribution-guidelines.md)
+- [Contributing Guidelines](./docs/contributing-guidelines.md)
 
 ## Summary for Developers
 
