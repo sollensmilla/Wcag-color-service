@@ -1,5 +1,7 @@
 # WCAG Color Service
 
+[![npm version](https://img.shields.io/npm/v/wcag-color-service.svg)](https://www.npmjs.com/package/wcag-color-service)
+[![npm downloads](https://img.shields.io/npm/dm/wcag-color-service.svg)](https://www.npmjs.com/package/wcag-color-service)
 WCAG Color Service is a lightweight JavaScript library designed to help developers generate accessible color palettes that meet [WCAG 2.1](https://www.w3.org/TR/WCAG21/) contrast guidelines.  
 It simplifies the process of finding suitable complementary colors in a nice palette while still being accessible and easy to read.
 
