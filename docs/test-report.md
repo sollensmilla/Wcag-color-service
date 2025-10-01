@@ -6,14 +6,14 @@
 
 ## Summary table of the WcagColorService testing
 
-The `WcagColorService.js` module was manually tested with Node.js (`npm test`) to verify contrast calculation, WCAG compliance, palette generation, library integration, and error handling.  
+The `WcagColorService.js` module was manually tested with Node.js (`npm test`) to verify contrast calculation, WCAG compliance, palette generation, npm package integration, and error handling.  
 
 | What was tested / Method or Requirement | How it was tested | Test Result |
 |----------------------------------------|-----------------|-------------|
 | Contrast Ratio Calculation (`contrastRatio`) | Compared `#FFFFFF` vs `#000000` and `#FF0000` vs `#00FF00` | ✅ Passed |
 | WCAG Compliance Check (`passesWcag`) | Tested White vs Black (AAA) and Red vs Green (Large Text) | ✅ Passed |
 | Palette Generation (`generatePalette`) | Generated palette for `#a34b96`, Level AA, Large Text false | ⚠️ Partially Passed |
-| Library Integration | Imported module into another project, generated palette for `#3498db` | ⚠️ Partially Passed |
+| NPM Package Integration |Installed published package via `npm install wcag-color-service` in a separate project | ⚠️ Partially Passed |
 | Error Handling – Invalid Hex Input | Passed invalid hex `"red"` to ColorConverter | ✅ Passed |
 | Error Handling – No Accessible Variant | Tried generating inaccessible lighter/darker variants | ✅ Passed |
 
@@ -31,8 +31,10 @@ This report documents the tests performed for the `WcagColorService.js` module. 
 * **Operating System:** macOS
 * **Node.js version:** v24.7.0
 * **Test runner:** Manual execution using `npm test` (Node)
-* **Dependencies:** None outside of project source files
-
+* **Dependencies:** Installed via npm registry:
+```
+npm install wcag-color-service
+```
 ---
 
 ## 3. Test Scope
@@ -42,7 +44,7 @@ The following functionalities were tested:
 1. **Contrast Ratio Calculation** – verifies that the service correctly computes contrast ratios between two colors.
 2. **WCAG Compliance Check** – validates that the service correctly determines whether color combinations meet WCAG requirements.
 3. **Palette Generation** – confirms that the service can generate accessible lighter/darker variants of a base color.
-4. **Library Integration** – validates that the module can be packaged and successfully imported into another project.
+4. **NPM Package Integration** – validates that the published npm module can be installed and successfully imported into another project.
 
 ---
 
@@ -114,12 +116,18 @@ Base color: `#a34b96`, Level: `AA`, Large Text: `false`
 
 ---
 
-### 4.4 Library Integration
+### 4.4 NPM Package Integration
 
 **Procedure:**
 
-* Zipped and imported the module into a separate project.
-* Used `import { WcagColorService } from 'wcag-color-service'`.
+* Installed the package in a clean test project using:
+```
+npm install wcag-color-service
+```
+* Imported the service via:
+```
+import { WcagColorService } from 'wcag-color-service'
+```
 * Successfully generated a palette from a base color (`#3498db`), but with no lightervariant .
 
 **Expected Output:**
@@ -169,7 +177,7 @@ The tests confirm that the core functionality of `WcagColorService.js` works as 
 
 * Contrast ratio and WCAG compliance checks are accurate.
 * Palette generation works, with appropriate handling of cases where variants cannot be found.
-* The library can be packaged and imported successfully into external projects.
+* The library can be published and installed from npm, and successfully imported into external projects.
 
 Further testing is recommended for:
 
