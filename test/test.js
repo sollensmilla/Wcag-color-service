@@ -24,13 +24,13 @@ console.log(wcagService.passesWcag(check2)) // Expected: false
 
 console.log('--- Testing generatePalette ---')
 // skapa request utan background
-const request = new ColorVariantRequest('#a34b96')
+const request = new ColorVariantRequest('#0d3e37ff')
   .withLevel('AA')
   .withLargeText(false)
 
 const palette = wcagService.generatePalette(request)
 console.log(palette)
-// Expected: { base: '#944B89', lighter: <accessible lighter>, darker: <accessible darker> }
+// Expected: { base: '#0c1d0cff', lighter: <accessible lighter>, darker: <accessible darker> }
 
 console.log('--- Testing invalid hex inputs ---')
 
@@ -43,13 +43,13 @@ try {
 }
 
 try {
-  wcagService.contrastRatio('#12', '#000000') // Too short
+  wcagService.contrastRatio('#12', '#440c51ff') // Too short
 } catch (error) {
   console.log(error.name) // Expected: InvalidHexColorError
 }
 
 try {
-  wcagService.contrastRatio('#GGGGGG', '#000000') // Invalid characters
+  wcagService.contrastRatio('#GGGGGG', '#000000ff') // Invalid characters
   console.log(error.name) // Expected: InvalidHexColorError
 } catch (error) {
   console.log(error.name) // Expected: InvalidHexColorError
