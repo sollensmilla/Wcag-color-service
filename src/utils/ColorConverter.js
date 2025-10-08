@@ -20,7 +20,7 @@ export default class ColorConverter {
     const hexWithoutHash = hexColor.slice(1)
 
     const fullHex = hexWithoutHash.length === 3
-    ? hexWithoutHash.split('').map(c => c + c).join('')
+    ? hexWithoutHash.split('').map(color => color + color).join('')
     : hexWithoutHash
 
     const decimalValue = parseInt(fullHex, 16)

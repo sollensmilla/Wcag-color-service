@@ -74,7 +74,7 @@ export class WcagColorService {
 
   findAccessibleVariant(request) {
     for (let factor = 0.1; factor <= 1.0; factor += 0.1) {
-      const candidate = request.direction === 'lighten'
+      const candidate = request.direction === 'lighter'
         ? this.lightenColor(request.basecolor, factor)
         : this.darkenColor(request.basecolor, factor)
 
@@ -102,8 +102,8 @@ export class WcagColorService {
   }
 
   generatePalette(request) {
-    const lighterRequest = this.#createVariantRequest(request, 'lighten')
-    const darkerRequest = this.#createVariantRequest(request, 'darken')
+    const lighterRequest = this.#createVariantRequest(request, 'lighter')
+    const darkerRequest = this.#createVariantRequest(request, 'darker')
 
     return {
       base: request.basecolor,
