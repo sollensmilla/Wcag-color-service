@@ -13,6 +13,7 @@ export default class ColorConverter {
   }
 
   hexToRgb(hexColor) {
+    hexColor = this.#normalizeHex(hexColor)
     if (!this.isValidHexColor(hexColor)) {
       throw new InvalidHexColorError(hexColor)
     }
@@ -20,8 +21,8 @@ export default class ColorConverter {
     const hexWithoutHash = hexColor.slice(1)
 
     const fullHex = hexWithoutHash.length === 3
-    ? hexWithoutHash.split('').map(color => color + color).join('')
-    : hexWithoutHash
+      ? hexWithoutHash.split('').map(color => color + color).join('')
+      : hexWithoutHash
 
     const decimalValue = parseInt(fullHex, 16)
 
@@ -38,6 +39,10 @@ export default class ColorConverter {
   }
 
   hexToHsl(hexColor) {
+    hexColor = this.#normalizeHex(hexColor)
+    if (!this.isValidHexColor(hexColor)) {
+      throw new InvalidHexColorError(hexColor)
+    }
     const { red, green, blue } = this.hexToRgb(hexColor)
     const normalizedRgb = this.#normalizeRgb({ red, green, blue })
 
@@ -74,7 +79,23 @@ export default class ColorConverter {
     })
   }
 
- #normalizeRgb({ red, green, blue }) {
+  #normalizeHex(hexColor) {
+    if (typeof hexColor !== 'string') throw new InvalidHexColorError(hexColor)
+
+    let clean = hexColor.trim().toLowerCase()
+
+    if (/^#[0-9a-f]{8}$/.test(clean)) {
+      clean = clean.slice(0, 7)
+    }
+
+    if (!/^#([0-9a-f]{3}|[0-9a-f]{6})$/.test(clean)) {
+      throw new InvalidHexColorError(hexColor)
+    }
+
+    return clean
+  }
+
+  #normalizeRgb({ red, green, blue }) {
     return { r: red / 255, g: green / 255, b: blue / 255 }
   }
 

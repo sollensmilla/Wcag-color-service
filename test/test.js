@@ -23,7 +23,7 @@ const check2 = new WcagCheck('#FF0000', '#00FF00', { isLargeText: true })
 console.log(wcagService.passesWcag(check2)) // Expected: false
 
 console.log('--- Testing generatePalette ---')
-const request = new ColorVariantRequest('#2e49b4ff')
+const request = new ColorVariantRequest('#75b45c')
   .withLevel('AA')
   .withLargeText(false)
 
