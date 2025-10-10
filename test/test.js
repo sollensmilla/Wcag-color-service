@@ -23,7 +23,7 @@ const check2 = new WcagCheck('#FF0000', '#00FF00', { isLargeText: true })
 console.log(wcagService.passesWcag(check2)) // Expected: false
 
 console.log('--- Testing generatePalette ---')
-const request = new ColorVariantRequest('#b861a1')
+const request = new ColorVariantRequest('#2e49b4ff')
   .withLevel('AA')
   .withLargeText(false)
 
@@ -41,7 +41,7 @@ try {
 }
 
 try {
-  wcagService.contrastRatio('#12', '#440c51ff') // Too short
+  wcagService.contrastRatio('#12', '#aa61ba') // Too short
 } catch (error) {
   console.log(error.name) // Expected: InvalidHexColorError
 }

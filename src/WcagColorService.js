@@ -72,18 +72,24 @@ export class WcagColorService {
     return this.passesWcag(wcagCheck)
   }
 
-  findAccessibleVariant(request) {
-    for (let factor = 0.1; factor <= 1.0; factor += 0.1) {
-      const candidate = request.direction === 'lighten'
-        ? this.lightenColor(request.basecolor, factor)
-        : this.darkenColor(request.basecolor, factor)
+findAccessibleVariant(request) {
+  for (let factor = 0.05; factor <= 0.95; factor += 0.05) {
+    const candidate = request.direction === 'lighten'
+      ? this.lightenColor(request.basecolor, factor)
+      : this.darkenColor(request.basecolor, factor)
 
-      if (this.isAccessible(request, candidate)) {
-        return candidate
-      }
+    if (this.isAccessible(request, candidate)) {
+      return candidate
     }
-    throw new NoAccessibleColorError(request.basecolor, request.direction)
   }
+
+  const fallback = request.direction === 'lighten' ? '#ffffff' : '#000000'
+  if (this.isAccessible(request, fallback)) return fallback
+
+  throw new NoAccessibleColorError(request.basecolor, request.direction)
+}
+
+
 
   #createVariantRequest(request, direction) {
     return new ColorVariantRequest(request.basecolor)
@@ -101,14 +107,94 @@ export class WcagColorService {
     }
   }
 
-  generatePalette(request) {
-    const lighterRequest = this.#createVariantRequest(request, 'lighten')
-    const darkerRequest = this.#createVariantRequest(request, 'darken')
+generatePalette(request) {
+  const lighter = this.#tryFindVariant(request, 'lighten')
+  const darker = this.#tryFindVariant(request, 'darken')
 
-    return {
-      base: request.basecolor,
-      lighter: this.#getVariantOrFallback(lighterRequest, 'No accessible lighter variant found'),
-      darker: this.#getVariantOrFallback(darkerRequest, 'No accessible darker variant found')
-    }
+  if (lighter && darker) return this.#paletteNormal(request, lighter, darker)
+  if (darker) return this.#paletteSingleType(request, 'darken', darker)
+  if (lighter) return this.#paletteSingleType(request, 'lighten', lighter)
+
+  return this.#findAccessibleFallback(request)
+}
+
+#tryFindVariant(request, direction) {
+  try {
+    const variantRequest = this.#createVariantRequest(request, direction)
+    return this.findAccessibleVariant(variantRequest)
+  } catch {
+    return null
   }
+}
+
+#paletteNormal(request, lighter, darker) {
+  return {
+    base: request.basecolor,
+    lighter,
+    darker
+  }
+}
+
+#paletteSingleType(request, type, firstVariant) {
+  const secondVariant = this.#tryFindSecondVariant(request, type, firstVariant)
+  const key1 = type === 'lighten' ? 'lighter1' : 'darker1'
+  const key2 = type === 'lighten' ? 'lighter2' : 'darker2'
+
+  return {
+    base: request.basecolor,
+    [key1]: firstVariant,
+    [key2]: secondVariant
+  }
+}
+
+#tryFindSecondVariant(request, direction, firstVariant) {
+  try {
+    const variantRequest = this.#createVariantRequest(request, direction)
+    const candidate = this.findAccessibleVariant({ ...variantRequest, factorStart: 0.5 })
+
+    if (candidate.toLowerCase() === firstVariant.toLowerCase()) {
+      return this.#shiftVariant(firstVariant, direction)
+    }
+
+    return candidate
+  } catch {
+    return this.#shiftVariant(firstVariant, direction)
+  }
+}
+
+#shiftVariant(hexColor, direction) {
+  const step = 0.1
+  return direction === 'lighten'
+    ? this.lightenColor(hexColor, step)
+    : this.darkenColor(hexColor, step)
+}
+
+#findAccessibleFallback(request) {
+  const white = '#ffffff'
+  const black = '#000000'
+
+  const whitePasses = this.#isFallbackAccessible(request, white)
+  const blackPasses = this.#isFallbackAccessible(request, black)
+
+  if (whitePasses && blackPasses)
+    return { base: request.basecolor, lighter: white, darker: black }
+  if (whitePasses)
+    return { base: request.basecolor, lighter: white, darker: 'No accessible darker variant found' }
+  if (blackPasses)
+    return { base: request.basecolor, lighter: 'No accessible lighter variant found', darker: black }
+
+  return {
+    base: request.basecolor,
+    lighter: 'No accessible lighter variant found',
+    darker: 'No accessible darker variant found'
+  }
+}
+
+#isFallbackAccessible(request, candidate) {
+  const check = new WcagCheck(candidate, request.basecolor, {
+    level: request.level,
+    isLargeText: request.isLargeText
+  })
+  return this.passesWcag(check)
+}
 }
