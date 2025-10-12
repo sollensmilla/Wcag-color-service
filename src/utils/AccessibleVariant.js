@@ -37,7 +37,7 @@ export default class AccessibleVariant {
     throw new NoAccessibleColorError(request.basecolor, request.direction)
   }
 
-  generatePalette(request) {
+  generateAccessiblePalette(request) {
     const lighter = this.#tryFindVariant(request, 'lighten')
     const darker = this.#tryFindVariant(request, 'darken')
 

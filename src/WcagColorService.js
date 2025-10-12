@@ -23,7 +23,7 @@ export class WcagColorService {
   }
 
   generatePalette(request) {
-    return this.accessibleVariant.generatePalette(request)
+    return this.accessibleVariant.generateAccessiblePalette(request)
   }
 
   #passesWcag(wcagCheck) {
