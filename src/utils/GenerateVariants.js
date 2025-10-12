@@ -8,47 +8,10 @@
 import ColorVariantRequest from './ColorVariantRequest.js'
 
 export default class GenerateVariants {
-constructor(finder, passesWcag, colorConverter) {
-  this.finder = finder
-  this.passesWcag = passesWcag
-  this.colorConverter = colorConverter
-}
-
-  fallbackToBlackOrWhite(request, direction) {
-    const black = '#000000'
-    const white = '#ffffff'
-
-    const blackAccessible = this.getBlackAccessible(request)
-    const whiteAccessible = this.getWhiteAccessible(request)
-
-    if (blackAccessible && whiteAccessible) {
-      return direction === 'lighten' ? white : black
-    }
-
-    if (blackAccessible) return black
-    if (whiteAccessible) return white
-
-    return black
-  }
-
-  getBlackAccessible(request) {
-    const black = '#000000'
-    return this.passesWcag({
-      foreground: black,
-      background: request.basecolor,
-      level: request.level,
-      isLargeText: request.isLargeText
-    })
-  }
-
-  getWhiteAccessible(request) {
-    const white = '#ffffff'
-    return this.passesWcag({
-      foreground: white,
-      background: request.basecolor,
-      level: request.level,
-      isLargeText: request.isLargeText
-    })
+  constructor(finder, passesWcag, colorConverter) {
+    this.finder = finder
+    this.passesWcag = passesWcag
+    this.colorConverter = colorConverter
   }
 
   tryFindVariant(request, direction) {
@@ -57,15 +20,22 @@ constructor(finder, passesWcag, colorConverter) {
       return this.finder.findAccessibleVariant(variantRequest)
     } catch (error) {
       console.warn(`${error.message}`)
-      return this.fallbackToBlackOrWhite(request, direction)
+      return this.#fallbackToBlackOrWhite(request, direction)
     }
+  }
+
+  #createVariantRequest(request, direction) {
+    return new ColorVariantRequest(request.basecolor)
+      .withLevel(request.level)
+      .withLargeText(request.isLargeText)
+      .withDirection(direction)
   }
 
   handleMissingLighter(request, darker) {
     console.warn('No lighter found — generating two darker variants.')
     const secondDarker = this.tryFindVariant({ ...request, basecolor: darker }, 'darker')
 
-    return this.buildPalette({
+    return this.#buildPalette({
       base: request.basecolor,
       variants: [darker, secondDarker],
       labels: ['darker', 'darker2']
@@ -76,7 +46,7 @@ constructor(finder, passesWcag, colorConverter) {
     console.warn('No darker found — generating two lighter variants.')
     const secondLighter = this.tryFindVariant({ ...request, basecolor: lighter }, 'lighter')
 
-    return this.buildPalette({
+    return this.#buildPalette({
       base: request.basecolor,
       variants: [lighter, secondLighter],
       labels: ['lighter', 'lighter2']
@@ -84,14 +54,14 @@ constructor(finder, passesWcag, colorConverter) {
   }
 
   buildStandardPalette(request, lighter, darker) {
-    return this.buildPalette({
+    return this.#buildPalette({
       base: request.basecolor,
       variants: [lighter, darker],
       labels: ['lighter', 'darker']
     })
   }
 
-  buildPalette({ base, variants }) {
+  #buildPalette({ base, variants }) {
     const sorted = this.#sortVariantsByBrightness(base, variants)
     const palette = { base }
     sorted.forEach((v, i) => {
@@ -109,10 +79,40 @@ constructor(finder, passesWcag, colorConverter) {
     }))
   }
 
-  #createVariantRequest(request, direction) {
-    return new ColorVariantRequest(request.basecolor)
-      .withLevel(request.level)
-      .withLargeText(request.isLargeText)
-      .withDirection(direction)
+  #fallbackToBlackOrWhite(request, direction) {
+    const black = '#000000'
+    const white = '#ffffff'
+
+    const blackAccessible = this.#getBlackAccessible(request)
+    const whiteAccessible = this.#getWhiteAccessible(request)
+
+    if (blackAccessible && whiteAccessible) {
+      return direction === 'lighten' ? white : black
+    }
+
+    if (blackAccessible) return black
+    if (whiteAccessible) return white
+
+    return black
+  }
+
+  #getBlackAccessible(request) {
+    const black = '#000000'
+    return this.passesWcag({
+      foreground: black,
+      background: request.basecolor,
+      level: request.level,
+      isLargeText: request.isLargeText
+    })
+  }
+
+  #getWhiteAccessible(request) {
+    const white = '#ffffff'
+    return this.passesWcag({
+      foreground: white,
+      background: request.basecolor,
+      level: request.level,
+      isLargeText: request.isLargeText
+    })
   }
 }

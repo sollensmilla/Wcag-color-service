@@ -8,19 +8,7 @@ export default class AccessibleVariant {
     this.wcagColorService = wcagColorService
   }
 
-  lightenColor(hexColor, lightnessFactor = 0.2) {
-    const hslColor = this.colorConverter.hexToHsl(hexColor)
-    hslColor.lightness = Math.min(1, hslColor.lightness + lightnessFactor)
-    return this.colorConverter.hslToHex(hslColor)
-  }
-
-  darkenColor(hexColor, darkeningFactor = 0.2) {
-    const hslColor = this.colorConverter.hexToHsl(hexColor)
-    hslColor.lightness = Math.max(0, hslColor.lightness - darkeningFactor)
-    return this.colorConverter.hslToHex(hslColor)
-  }
-
-  findAccessibleVariant(request) {
+    findAccessibleVariant(request) {
     for (let lightnessFactor = 0.05; lightnessFactor <= 0.95; lightnessFactor += 0.05) {
       const candidate = request.direction === 'lighten'
         ? this.lightenColor(request.basecolor, lightnessFactor)
@@ -35,6 +23,18 @@ export default class AccessibleVariant {
     if (this.wcagColorService.isAccessible(request, fallback)) return fallback
 
     throw new NoAccessibleColorError(request.basecolor, request.direction)
+  }
+
+  lightenColor(hexColor, lightnessFactor = 0.2) {
+    const hslColor = this.colorConverter.hexToHsl(hexColor)
+    hslColor.lightness = Math.min(1, hslColor.lightness + lightnessFactor)
+    return this.colorConverter.hslToHex(hslColor)
+  }
+
+  darkenColor(hexColor, darkeningFactor = 0.2) {
+    const hslColor = this.colorConverter.hexToHsl(hexColor)
+    hslColor.lightness = Math.max(0, hslColor.lightness - darkeningFactor)
+    return this.colorConverter.hslToHex(hslColor)
   }
 
   generateAccessiblePalette(request) {
