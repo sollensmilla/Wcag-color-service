@@ -102,6 +102,13 @@ export default class AccessibleVariant {
         }
     }
 
+    #createVariantRequest(request, direction) {
+        return new ColorVariantRequest(request.basecolor)
+            .withLevel(request.level)
+            .withLargeText(request.isLargeText)
+            .withDirection(direction)
+    }
+
     #shiftVariant(hexColor, direction) {
         return direction === 'lighten'
             ? this.lightenColor(hexColor, lightnessShift)
@@ -134,12 +141,5 @@ export default class AccessibleVariant {
             isLargeText: request.isLargeText
         })
         return this.wcagColorService.passesWcag(wcagCheck)
-    }
-
-    #createVariantRequest(request, direction) {
-        return new ColorVariantRequest(request.basecolor)
-            .withLevel(request.level)
-            .withLargeText(request.isLargeText)
-            .withDirection(direction)
     }
 }
