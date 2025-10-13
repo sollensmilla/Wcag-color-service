@@ -9,10 +9,14 @@ It simplifies the process of finding suitable complementary colors in a nice pal
 
 ## Features
 - Generate WCAG-compliant color palettes automatically from only one hex-color
+- Returns a palette of three colors (base + 2 complementary colors)
 - Support for multiple WCAG levels (AA, AAA)
 - Handles both normal text and large text accessibility
 - Small, dependency-free, and easy to integrate
 - Modular structure for flexibility and clarity
+
+**Note:** In version 2.0.0, the palette includes three colors: the base color plus two additional colors. Unlike previous versions, the complementary colors are not guaranteed to be one lighter and one darker. Depending on contrast requirements, the palette may include two lighter or two darker colors, but it will always provide three accessible colors when available.
+
 
 ---
 
@@ -31,7 +35,7 @@ import { WcagColorService } from 'wcag-color-service'
 const service = new WcagColorService()
 
 const palette = service.generatePalette({
-  basecolor: '#3498db',
+  basecolor: '#75b45c',
   level: 'AA',
   isLargeText: false
 })
@@ -42,10 +46,12 @@ console.log(palette)
 ### Example output:
 ```bash
 {
-  base: '#3498db',
-  lighter: '#66b3ff',
-  darker: '#2673b8'
+  base: '#75b45c',
+  darker: '#27401d',
+  darker: '#121d0d'
 }
+
+Note: color1 and color2 may both be lighter or darker than the base color, depending on accessibility constraints. If you choose a medium intensity base color, it is more likely to generate both a darker and a ligther complementary color.
 ```
 ## Supported Environments
 |Requirement| Version   |
@@ -64,8 +70,10 @@ wcag-color-service/
     ├── errors/
     │   └── NoAccessibleColorError.js
     └── utils/
+        ├── AccessibleVariant.js
         ├── ColorConverter.js
         ├── ColorVariantRequest.js
+        ├── GenerateVariants.js
         └── WcagCheck.js
  ```
 
@@ -74,8 +82,6 @@ wcag-color-service/
 These are the only files and classes you should interact with:
 
 - WcagColorService (main class)
-
-- NoAccessibleColorError (error handling)
 
 Everything inside utils/ is considered internal and should not be accessed directly.
 
@@ -132,7 +138,7 @@ See [LICENSE](./LICENSE) for full details.
 
 - [Test Report](./docs/test-report.md)
 
-- [Bug Report](./docs/bug-report.md)
+- [Bug Report](./docs/bug-report.md) (SOLVED in version 2.0.0)
 
 - [Contributing Guidelines](./docs/contributing-guidelines.md)
 
