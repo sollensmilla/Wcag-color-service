@@ -1,11 +1,11 @@
 {
   "name": "wcag-color-service",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "A service for generating WCAG-compliant color palettes.",
   "type": "module",
   "main": "index.js",
   "scripts": {
-  "test": "node test/test.js",
+    "test": "node test/test.js",
     "start": "node src/server.js"
   },
   "repository": {
@@ -13,11 +13,11 @@
     "url": "git+https://github.com/sollensmilla/Wcag-color-service.git"
   },
   "files": [
-  "index.js",
-  "src/",
-  "README.md",
-  "LICENSE"
-],
+    "index.js",
+    "src/",
+    "README.md",
+    "LICENSE"
+  ],
   "keywords": [
     "wcag",
     "color",
