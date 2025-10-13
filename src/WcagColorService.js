@@ -19,14 +19,14 @@ export class WcagColorService {
       level: request.level,
       isLargeText: request.isLargeText
     })
-    return this.#passesWcag(wcagCheck)
+    return this.passesWcag(wcagCheck)
   }
 
   generatePalette(request) {
     return this.accessibleVariant.generateAccessiblePalette(request)
   }
 
-  #passesWcag(wcagCheck) {
+  passesWcag(wcagCheck) {
     const ratio = this.#contrastRatio(wcagCheck.foreground, wcagCheck.background)
     if (wcagCheck.isLargeText) return ratio >= 3
     if (wcagCheck.level === 'AAA') return ratio >= 7
