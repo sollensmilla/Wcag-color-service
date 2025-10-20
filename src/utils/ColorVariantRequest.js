@@ -1,13 +1,3 @@
-/**
- * Utility class for the color variant requests.
- *
- * @author Smilla Sollén
- * @version 2.0.0
- */
-
-/**
- * Sets the base color and preferences for generating accessible color variants.
- */
 export default class ColorVariantRequest {
   constructor(basecolor) {
     this.basecolor = basecolor

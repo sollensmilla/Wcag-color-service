@@ -4,6 +4,7 @@
  * @author Smilla Sollén
  * @version 1.0.0
  */
+
 import ColorConverter from './utils/ColorConverter.js'
 import WcagCheck from './utils/WcagCheck.js'
 import AccessibleVariant from './utils/AccessibleVariant.js'

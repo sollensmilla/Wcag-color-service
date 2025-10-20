@@ -1,10 +1,3 @@
-/**
- * Utility class for color conversion and manipulation.
- *
- * @author Smilla Sollén
- * @version 2.0.0
- */
-
 import InvalidHexColorError from '../errors/InvalidHexColorError.js'
 
 export default class ColorConverter {
