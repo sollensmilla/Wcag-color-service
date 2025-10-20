@@ -1,7 +1,7 @@
 /**
  * WCAG Color Service
  *
- * @author Smilla Sollén
+ * @author Smilla Sollén <ss226uk@student.lu.se>
  * @version 1.0.0
  */
 
