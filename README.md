@@ -73,7 +73,6 @@ wcag-color-service/
         ├── AccessibleVariant.js
         ├── ColorConverter.js
         ├── ColorVariantRequest.js
-        ├── GenerateVariants.js
         └── WcagCheck.js
  ```
 
