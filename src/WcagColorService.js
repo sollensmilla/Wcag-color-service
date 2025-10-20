@@ -2,7 +2,7 @@
  * WCAG Color Service
  *
  * @author Smilla Sollén <ss226uk@student.lu.se>
- * @version 1.0.0
+ * @version 2.0.1
  */
 
 import ColorConverter from './utils/ColorConverter.js'
