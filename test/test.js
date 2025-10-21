@@ -12,10 +12,11 @@ import ColorVariantRequest from '../src/utils/ColorVariantRequest.js'
 const wcagService = new WcagColorService()
 
 console.log('--- Testing generatePalette ---')
-const request = new ColorVariantRequest('#75b45c')
+const request = new ColorVariantRequest('#114542')
   .withLevel('AA')
   .withLargeText(false)
 
 const palette = wcagService.generatePalette(request)
 console.log(palette)
+
 
